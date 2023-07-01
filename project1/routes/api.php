@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 | 1. Added routes that requires a user to be signed in to auth middleware
 | 2. Replaced properties CRUD routes with resource method
 | 3. Named routes to better refrence them in code
+| 4. Added routes for property images - still not done yet
 */
 
 /*
@@ -28,6 +29,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('properties', PropertiesController::class);
     Route::get('properties/favorites', [PropertiesController::class, 'favorites'])->name('properties.favorites');
     Route::post('properties/{property}/favorite', [PropertiesController::class, 'change_favorite_state'])->where('property', '[0-9]+')->name('properties.favorite');
+    Route::resource('properties/{property}/images', PropertyImagesController::class);
     Route::post('/logout', [AuthController::class,'logout']);
 });
 
