@@ -62,7 +62,7 @@ class PropertiesController extends Controller
 
         return response()->json($favs);
     }
-        public function change_favorite_state(Request $request)
+    public function change_favorite_state(Request $request)
         {
             if($request->posttype=='sale'){
             $favorite = Favorite::where('user_id', $request->user_id)->where('sale_post_id', $request->post_id);
