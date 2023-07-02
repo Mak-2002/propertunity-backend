@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Property;
-use App\Models\viewPlan;
+use App\Models\ViewPlan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,8 +19,7 @@ class SalePostFactory extends Factory
     public function definition(): array
     {
         return [
-            'property_id'=>Property::factory(),
-            'view_plan_id'=>viewPlan::factory(),
+            'view_plan_id'=>ViewPlan::factory(),
             'price'=>$this->faker->randomNumber(),
             'visibility'=>$this->faker->boolean,
         ];

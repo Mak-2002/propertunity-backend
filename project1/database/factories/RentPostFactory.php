@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Property;
-use App\Models\viewPlan;
+use App\Models\ViewPlan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +20,7 @@ class RentPostFactory extends Factory
     {
         return [
         'property_id'=>Property::factory(),
-        'view_plan_id'=>viewPlan::factory(),
+        'view_plan_id'=>ViewPlan::factory(),
         'monthly_rent'=>$this->faker->randomNumber(),
         'duration'=>$this->faker->randomDigitNot(0),
         'visibility'=>$this->faker->boolean

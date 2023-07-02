@@ -18,7 +18,7 @@ return new class extends Migration
             // $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->integer('balance');
-            $table->boolean('verefied');
+            $table->boolean('verified')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

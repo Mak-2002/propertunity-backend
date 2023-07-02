@@ -17,7 +17,7 @@ class SalePost extends Model
 
     public function viewPlan()
     {
-        return $this->hasMany(viewPlan::class);
+        return $this->hasMany(ViewPlan::class);
     }
 
     public function favorable_by() {
