@@ -62,12 +62,12 @@ class AuthController extends Controller
         }
 
         $user = User::where('phone', $request->phone)->first();
-        $id = $user->id;
-        $sms=$this->sendSMS($id);
+        $authToken = $user->createToken('auth-token')->plainTextToken;
+
         return response([
             'status' => true,
-            'user_id' => $id,
-            'otp' => $sms['otp'],
+            'access_token' => $authToken
+          
         ]);
         
     }
