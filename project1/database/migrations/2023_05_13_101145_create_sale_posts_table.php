@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('sale_posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->foreignId('property_id');
+           
             $table->foreignId('view_plan_id');
             $table->string('property_type');
+           // $table->unsignedBigInteger('property_id');
+          //  $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->double('price');
             $table->boolean('visibility');
+            $table->unsignedBigInteger('postable_id');
             $table->timestamps();
         });
     }

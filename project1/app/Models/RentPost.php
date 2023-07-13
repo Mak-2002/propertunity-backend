@@ -10,6 +10,7 @@ class RentPost extends Model
     use HasFactory;
     public function property()
     {
+       
         return $this->morphTo();
     }
     public function viewPlan()

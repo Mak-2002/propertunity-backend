@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Property;
+use App\Models\User;
 use App\Models\ViewPlan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,11 +20,13 @@ class RentPostFactory extends Factory
     public function definition(): array
     {
         return [
-        'property_id'=>Property::factory(),
+        'user_id'=>User::factory(),
         'view_plan_id'=>ViewPlan::factory(),
         'monthly_rent'=>$this->faker->randomNumber(),
-        'duration'=>$this->faker->randomDigitNot(0),
-        'visibility'=>$this->faker->boolean
+        'max_duration'=>$this->faker->randomDigitNot(0),
+        'visibility'=>$this->faker->boolean,
+        'property_type'=>$this->faker->text()
+
         ];
     }
 }

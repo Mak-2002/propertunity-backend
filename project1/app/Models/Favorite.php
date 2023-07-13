@@ -11,16 +11,16 @@ class Favorite extends Model
 
     public function user()
     {
-        return $this->belongsTo(Rating::class);
+        return $this->belongsTo(User::class);
     }
 
     public function salePost()
     {
-        return $this->belongsTo(Rating::class);
+        return $this->belongsTo(SalePost::class);
     }
 
     public function rentPost()
     {
-        return $this->belongsTo(Rating::class);
+        return $this->belongsTo(RentPost::class);
     }
 }

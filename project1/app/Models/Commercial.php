@@ -8,15 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Commercial extends Model
 {
     use HasFactory;
-
-    public function rentpost()
-    {
-        return $this->morphMany('RentPost','property');
+    // public function property()
+    // {
+    //     return $this->belongsTo(Property::class);
+    // }
+    public function rent()
+    {   
+       
+        return $this->morphMany(RentPost::class,'property');
     }
 
-    public function salepost()
+    public function sale()
     {
-        return $this->morphMany('salePost','property');
+        return $this->morphMany(salePost::class,'property');
     }
     
 }

@@ -22,7 +22,7 @@ class CommercialFactory extends Factory
             'name'=>$this->faker->name(),
             'address'=>$this->faker->text,
             'about'=>$this->faker->text,
-            '360_image'=>$this->faker->text,
+            '360_view'=>$this->faker->text,
             'image_library'=>$this->faker->text,
             'room_count'=>$this->faker->randomNumber(),
             'bathroom_count'=>$this->faker->randomNumber(),
