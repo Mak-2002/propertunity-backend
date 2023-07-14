@@ -15,13 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('view_plan_id');
-            $table->string('property_type');
+            $table->morphs('property');
+           // $table->string('property_type');
            // $table->unsignedBigInteger('property_id');
           //  $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->double('monthly_rent');
             $table->integer('max_duration')->nullable();
             $table->boolean('visibility');
-            $table->unsignedBigInteger('postable_id');
+         //   $table->unsignedBigInteger('postable_id');
             $table->timestamps();
         });
     }

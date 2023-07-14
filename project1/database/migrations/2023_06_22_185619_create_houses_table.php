@@ -31,7 +31,7 @@ return new class extends Migration
             $table->boolean('security_cameras')->nullable();
             $table->boolean('Wi-Fi')->nullable();
             $table->boolean('garden')->nullable();
-            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
+            //$table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->timestamps();
         });
     }

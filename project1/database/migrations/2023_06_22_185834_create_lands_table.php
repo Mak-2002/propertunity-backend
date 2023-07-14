@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('360_view')->nullable();
             $table->string('image_library');
             $table->integer('area');
-            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
+           // $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->timestamps();
 
         });
