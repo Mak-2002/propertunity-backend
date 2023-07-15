@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('properties', function (Blueprint $table) {
+        Schema::create('apartments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
             $table->string('name')->nullable();
@@ -26,12 +26,14 @@ return new class extends Migration
             $table->integer('storey');
             $table->integer('area');
             $table->integer('balkony')->nullable();
+            $table->boolean('gym')->nullable();
+            $table->boolean('pool')->nullable();
             $table->boolean('parking')->nullable();
             $table->boolean('security_cameras')->nullable();
             $table->boolean('elevator')->nullable();
             $table->boolean('Wi-Fi')->nullable();
             $table->boolean('security_gard')->nullable();
-          //  $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
+           // $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -41,6 +43,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('properties');
+        Schema::dropIfExists('apartments');
     }
 };
