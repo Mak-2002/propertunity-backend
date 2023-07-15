@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Favorite;
+use App\Models\House;
 use App\Models\RentPost;
 use App\Models\SalePost;
 use App\Models\User;
@@ -21,7 +22,8 @@ class PropertiesController extends Controller
             'rooms' =>$request->rooms
               ////price range
 
-            ])->with('Property')->get();}
+            ])->with('Property')->get();
+        }
             elseif($request->posttype=='rent'){
                 $posts = RentPost::latest()->filter([
                     'search' => $request->search,
@@ -31,9 +33,10 @@ class PropertiesController extends Controller
                       ////monthly rent
         
                     ])->with('Property')->get();
+                    
             }
-        
-          return ($posts->toJSON());
+            dd($posts);
+        //   return ($posts->toJSON());
     }
 
     public function show(Request $request)
@@ -59,7 +62,7 @@ class PropertiesController extends Controller
                 'favorable_by',
                 fn($query) =>
                 $query->where('user_id', $request->id)
-            )->get();}
+            )->with('property')->get();}
 
 
         return response()->json($favs);
@@ -110,5 +113,20 @@ class PropertiesController extends Controller
         }
 
        
+        }
+        public function test(Request $request)
+        {
+            $property=House::where('id',$request->id)->with('rent')->get();
+            return ($property->toJSON());
+        }
+
+        public function test2(Request $request)
+        {
+            $favs = House::whereHasMorph(
+                'rent',
+                fn($query) =>
+                $query->where('id', $request->id)
+            )->get();
+            return ($favs->toJSON());
         }
 }

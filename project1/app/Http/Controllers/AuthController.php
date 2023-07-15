@@ -18,18 +18,11 @@ class AuthController extends Controller
             'phone' => 'required|unique:users|numeric',
             'password' => 'min:6',
         ]);
-
-        $user = new User;
-        $user->name = $request->name;
-        $user->phone = $request->phone;
-        $user->password = bcrypt($request->password);
-
-        $user->save();
+        
        // $authToken = $user->createToken('auth-token')->plainTextToken;
-        $sms=$this->sendSMS($user->id);
+        $sms=$this->sendSMS($request->phone);
         return response([
             'success' => true,
-            'otp' => $sms['otp'],
             // 'access_token' => $authToken,
         ]);
     }
@@ -73,14 +66,14 @@ class AuthController extends Controller
     }
 
     //send the otp 2222222
-    public function sendSMS(int $id)
+    public function sendSMS(string $phone)
     {   
         $basic = new \Vonage\Client\Credentials\Basic("ee1556fd", "P5eaWOJvY1kKp6GY");
         $client = new \Vonage\Client($basic);
-        $user = User::where('id', $id)->first();
-        $phone=$user->phone;
+       // $user = User::where('id', $id)->first();
+    //    $phone=$user->phone;
         # User Does not Have Any Existing OTP
-        $verificationCode = VerificationCode::where('user_id', $id)->latest()->first();
+        $verificationCode = VerificationCode::where('phone', $phone)->latest()->first();
 
         $now = now();
 
@@ -91,7 +84,7 @@ class AuthController extends Controller
         // Create a New OTP
         else{
         $verificationCode = VerificationCode::create([
-            'user_id' => $id,
+            'phone' => $phone,
             'otp' => rand(111111, 999999),
             'expire_at' => now()->addMinutes(10),
         ]);
@@ -127,7 +120,7 @@ class AuthController extends Controller
         // ]);
 
         #Validation Logic
-        $verificationCode = VerificationCode::where('user_id', $request->user_id)->where('otp', $request->otp)->first();
+        $verificationCode = VerificationCode::where('phone', $request->phone)->where('otp', $request->otp)->first();
 
         $now = now();
         if (!$verificationCode) {
@@ -141,21 +134,32 @@ class AuthController extends Controller
                 'status' => 'Your OTP has been expired',
             ]);
         }
-
-        $user = User::whereId($request->user_id)->first();
-
-        // if($user){
         // Expire The OTP
         $verificationCode->update([
             'expire_at' => now(),
         ]);
+        $user = User::where('phone',$request->phone)->first();
+
+        if($user){
+        $authToken = $user->createToken('auth-token')->plainTextToken;
+        return response()->json([
+            'status' => true,
+            'access_token' => $authToken,
+        ]);
+         }
+         if(!$user){
+            $user = new User;
+        $user->name = $request->name;
+        $user->phone = $request->phone;
+        $user->password = bcrypt($request->password);
+        $user->save();
         $authToken = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
             'status' => true,
             'access_token' => $authToken,
         ]);
-        // }
+         }
 
         /// return redirect()->route('otp.login')->with('error', 'Your Otp is not correct');
     }

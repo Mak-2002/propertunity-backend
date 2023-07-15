@@ -12,6 +12,7 @@ class Apartment extends Model
     // {
     //     return $this->belongsTo(Property::class);
     // }
+    
     public function rent()
     {   
        
@@ -20,6 +21,6 @@ class Apartment extends Model
 
     public function sale()
     {
-        return $this->morphMany(salePost::class,'property');
+        return $this->morphMany(SalePost::class,'property');
     }
 }

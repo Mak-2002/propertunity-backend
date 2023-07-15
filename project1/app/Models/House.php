@@ -14,6 +14,7 @@ class House extends Model
     // }
     public function rent()
     {   
+        //return $this->morphTo();
        
         return $this->morphMany(RentPost::class,'property');
     }
