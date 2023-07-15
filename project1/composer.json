@@ -15,6 +15,7 @@
         "vonage/client": "^4.0"
     },
     "require-dev": {
+        "beyondcode/laravel-er-diagram-generator": "^2.0",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
@@ -22,6 +23,7 @@
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.2",
         "phpunitgen/console": "^5.0",
+        "reliese/laravel": "^1.2",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
