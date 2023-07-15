@@ -4,10 +4,10 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+
+use App\Models\PropertyType;
 use App\Models\Favorite;
-use App\Models\House;
-use App\Models\Office;
-use App\Models\Apartment;
+use App\Models\Property;
 use App\Models\Rating;
 use App\Models\RatingAspect;
 use App\Models\RentPost;
@@ -17,7 +17,6 @@ use Illuminate\Database\Seeder;
 use \App\Models\User;
 use App\Models\ViewPlan;
 use App\Models\ViewRequest;
-use App\Models\Villa;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,27 +25,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-    User::factory(10)->create();
-    SalePost::factory(10)->create();
-    RentPost::factory(10)->create();
-    House::factory(10)->create();
-    Villa::factory(10)->create();
-    Office::factory(10)->create();
-    Apartment::factory(10)->create();
-    ViewPlan::factory(10)->create();
-    ViewRequest::factory(5)->create([
-        'sale_post_id'=>3,
-        'rent_post_id'=>null
-    ]);
-    ViewRequest::factory(5)->create([
-        'rent_post_id'=>2,
-        'sale_post_id'=>null
+        User::factory(10)->create();
+        SalePost::factory(10)->create();
+        RentPost::factory(10)->create();
+        Property::factory(10)->create();
+        ViewPlan::factory(10)->create();
+        ViewRequest::factory(5)->create([
+            'sale_post_id' => 3,
+            'rent_post_id' => null
+        ]);
+        ViewRequest::factory(5)->create([
+            'rent_post_id' => 2,
+            'sale_post_id' => null
 
-    ]);
-    Rating::factory(10)->create();
-    RatingAspect::factory(10)->create();
-    Review::factory(10)->create();
-    Favorite::factory(10)->create();
+        ]);
+        Rating::factory(10)->create();
+        RatingAspect::factory(10)->create();
+        Review::factory(10)->create();
+        Favorite::factory(10)->create();
 
 
 
@@ -54,5 +50,24 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         //  ]);
+        PropertyType::factory()->create([
+            [
+                'name' => 'Villa',
+            ],
+            [
+                'name' => 'Commercial',
+            ],
+            [
+                'name' => 'Office',
+            ],
+            [
+                'name' => 'House',
+            ],
+            [
+                'name' => 'Land',
+            ]
+            // Add more rows as needed
+        ]);
+
     }
 }

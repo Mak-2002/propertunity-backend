@@ -2,15 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Apartment;
-use App\Models\Commercial;
-use App\Models\House;
-use App\Models\Land;
-use App\Models\Office;
 use App\Models\Property;
 use App\Models\User;
 use App\Models\ViewPlan;
-use App\Models\Villa;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

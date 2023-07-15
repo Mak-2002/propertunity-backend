@@ -6,9 +6,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Apartment>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Property>
  */
-class ApartmentFactory extends Factory
+class PropertyFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -30,14 +30,10 @@ class ApartmentFactory extends Factory
             'storey'=>$this->faker->randomNumber(),
             'area'=>$this->faker->randomNumber(),
             'balkony'=>$this->faker->randomNumber(),
-            'gym'=>$this->faker->boolean(),
-            'pool'=>$this->faker->boolean(),
             'parking'=>$this->faker->boolean(),
             'security_cameras'=>$this->faker->boolean(),
-            'elevator'=>$this->faker->boolean(),
             'Wi-Fi'=>$this->faker->boolean(),
             'security_gard'=>$this->faker->boolean()
-
         ];
     }
 }
