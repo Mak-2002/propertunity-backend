@@ -12,15 +12,18 @@ use Illuminate\Http\Request;
 class PropertiesController extends Controller
 {
     public function index(Request $request)
-    {
+    {    
         $max=$request->max;
         if($request->posttype=='sale'){
         $posts = SalePost::latest()->filter([
             'search' => $request->search,
             'type' => $request->type,
-            'min' =>$request->min,////range
-            'rooms' =>$request->rooms
-              ////price range
+            'rooms' =>$request->rooms,
+            'area_min' =>$request->area_min,
+            'area_max' =>$request->area_max,
+            'price_min'=>$request->price_min,
+            'price_max'=>$request->price_max
+          
 
             ])->with('Property')->get();
         }
@@ -28,23 +31,45 @@ class PropertiesController extends Controller
                 $posts = RentPost::latest()->filter([
                     'search' => $request->search,
                     'type' => $request->type,
-                    'area' =>$request->area,////range
-                    'rooms' =>$request->rooms
-                      ////monthly rent
+                    'rooms' =>$request->rooms,
+                    'area_min' =>$request->area_min,
+                    'area_max' =>$request->area_max,
+                    'price_min'=>$request->price_min,
+                    'price_max'=>$request->price_max
+                      
         
                     ])->with('Property')->get();
                     
             }
-            dd($posts);
-        //   return ($posts->toJSON());
+            
+          return ($posts->toJSON());
     }
 
-    public function show(Request $request)
-    {
-        $property=SalePost::where('id',$request->id)->with('property')->get();
-        return ($property->toJSON());
+    public function show(Request $request,$id)
+    {   
+        if($request->posttype=='sale'){
+        $property=SalePost::where('id',$id)->with('property')->get();
+        return ($property->toJSON());}
+        
+        if($request->posttype=='rent'){
+        $property=RentPost::where('id',$id)->with('property')->get();
+        return ($property->toJSON());}
     }
     
+    public function destroy(Request $request,$id)
+    {   
+        if($request->posttype=='sale'){
+        $property=SalePost::where('id',$id)->with('property');
+        $property->delete();
+        return ('deleted successfully');}
+        
+        if($request->posttype=='rent'){
+        $property=RentPost::where('id',$id)->with('property');
+        $property->delete();
+        return ('deleted successfully');}
+        
+    }
+
     public function favorites(request $request)
     {   
         if($request->posttype=='sale'){

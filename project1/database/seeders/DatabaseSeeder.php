@@ -8,6 +8,8 @@ use App\Models\Favorite;
 use App\Models\House;
 use App\Models\Office;
 use App\Models\Apartment;
+use App\Models\Commercial;
+use App\Models\Land;
 use App\Models\Rating;
 use App\Models\RatingAspect;
 use App\Models\RentPost;
@@ -34,6 +36,9 @@ class DatabaseSeeder extends Seeder
     Office::factory(10)->create();
     Apartment::factory(10)->create();
     ViewPlan::factory(10)->create();
+    Land::factory(10)->create();
+    Commercial::factory(10)->create();
+
     ViewRequest::factory(5)->create([
         'sale_post_id'=>3,
         'rent_post_id'=>null
