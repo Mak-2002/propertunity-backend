@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class RentPost extends Model
 {
     use HasFactory;
+    protected $guarded = [
+        'id',
+        'user_id',
+        'property_id',
+        'property_type',
+
+        // other sensitive attributes
+    ];
     public function property()
     {
        // return $this->morphMany(House::class,'property');

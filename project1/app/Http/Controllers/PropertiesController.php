@@ -172,15 +172,78 @@ class PropertiesController extends Controller
             return ($property->toJSON());}
     }
 
-    public function update($request,$id)
-    { dd($request);
-    //   if($request->price||$request->view_plan_id){
-    //     $post = SalePost::where('id',$request->id);
+    public function update(Request $request , $id)
+    { 
+    //   if($request->price){
+    //     $post = SalePost::with('property')->findOrFail($id);
     //     $post->update($request->all());
-    //     return $post;
-    //   }
-    //   return false;
 
+    //   }
+    //   if($request->monthly_rent||$request->max_duration){
+    //     $post = RentPost::with('property')->findOrFail($id);
+    //     $post->update($request->all());
+   
+        
+    //   }
+            
+
+    //     if ($post) {
+    //         $property = $post->property;
+    //         if ($property) {
+    //             $property->update($request->all());
+    //         }
+    //         $post->update($request->all());
+    //     }
+    //     return response([
+    //         'status' => true,
+    //         'post' => $post,
+    //     ]);
+
+
+
+    //             // Retrieve the post by ID
+    // $post = SalePost::with('property')->findOrFail($id);
+
+    // // Retrieve the related property
+    // $property = $post->property;
+
+    // // Update the post attributes
+    // $post->update($request->all());
+
+    // // Update the property attributes
+    // $property->update($request->all());
+
+    // // Return a response with the updated post and property data
+    // return response([
+    //     'status' => true,
+    //     'post' => $post,
+    //     'property' => $property,
+    // ]);
+
+         // Retrieve the post by ID
+    $post = SalePost::findOrFail($id);
+
+    // Check if the request data includes any post attributes
+    $postAttributes = array_intersect_key($request->all(), $post->getAttributes());
+    $hasPostAttributes = !empty($postAttributes);
+
+    // Check if the request data includes any property attributes
+    $propertyAttributes = array_intersect_key($request->all(), $post->property->getAttributes());
+    $hasPropertyAttributes = !empty($propertyAttributes);
+
+    // Update the post and property attributes if there are any post or property attributes in the request data
+    if ($hasPostAttributes) {
+        $post->update($postAttributes);
+    }
+    if ($hasPropertyAttributes) {
+        $post->property->update($propertyAttributes);
+    }
+
+    // Return a response with the updated post and property data
+    return response([
+        'status' => true,
+        'post' => $post,
+    ]);
     }
 
     public function destroy(Request $request, $id)
