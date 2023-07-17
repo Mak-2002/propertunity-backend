@@ -35,9 +35,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
-Route::get('sendSMS', [AuthController::class , 'sendSMS']);
-Route::get('generateOtp', [AuthController::class , 'generateOtp']);
 Route::get('verification', [AuthController::class , 'verification']); 
-Route::get('test', [PropertiesController::class , 'test']);
-Route::get('test2', [PropertiesController::class , 'test2']);
+
+
+
+
+// Route::get('sendSMS', [AuthController::class , 'sendSMS']);
+// Route::get('generateOtp', [AuthController::class , 'generateOtp']);
+// Route::get('test', [PropertiesController::class , 'test']);
+// Route::get('test2', [PropertiesController::class , 'test2']);
 

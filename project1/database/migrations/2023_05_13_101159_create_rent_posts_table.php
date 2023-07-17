@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('rent_posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->foreignId('view_plan_id');
+            $table->foreignId('view_plan_id')->nullable();
             $table->morphs('property');
            // $table->string('property_type');
            // $table->unsignedBigInteger('property_id');
           //  $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->double('monthly_rent');
             $table->integer('max_duration')->nullable();
-            $table->boolean('visibility');
+            $table->boolean('visibility')->default(false);
          //   $table->unsignedBigInteger('postable_id');
             $table->timestamps();
         });

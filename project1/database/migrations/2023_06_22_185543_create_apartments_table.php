@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('address');
             $table->text('about');
             $table->string('360_view')->nullable();
-            $table->string('image_library');
+            $table->string('image_library')->nullable();
             $table->integer('room_count');
             $table->integer('bathroom_count');
             $table->integer('kitchen_count');
