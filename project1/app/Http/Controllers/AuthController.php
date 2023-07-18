@@ -12,13 +12,12 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     public function register(Request $request)
-    {
+    { 
         $request->validate([
             'name' => 'required',
-            'phone' => 'required|unique:users|numeric',
+            'phone' => ['required','unique:users', 'regex:/^[0-9]+$/'],
             'password' => 'min:6',
         ]);
-        
        // $authToken = $user->createToken('auth-token')->plainTextToken;
         $sms=$this->sendSMS($request->phone);
         return response([
@@ -42,8 +41,9 @@ class AuthController extends Controller
     ///login screen 1111111
     public function login(Request $request)
     {
+      
         request()->validate([
-            'phone' => 'required|numeric',
+            'phone' => ['required', 'regex:/^[0-9]+$/'],
             'password' => 'min:6',
         ]);
 
@@ -112,16 +112,18 @@ class AuthController extends Controller
 
     //////verification of the otp 44444444
     public function verification(Request $request)
-    {
+    { 
         #Validation
-        // $request->validate([
-        //     'user_id' => 'required|exists:users,id',
-        //     'otp' => 'required'
-        // ]);
-
+        $request->validate([
+            'name' => 'required',
+            'phone' => ['required', 'regex:/^[0-9]+$/'],
+            'otp' => ['required','regex:/^[0-9]+$/','digits:6'],
+            'password' => 'min:6',
+        ]);
+        
         #Validation Logic
-        $verificationCode = VerificationCode::where('phone', $request->phone)->where('otp', $request->otp)->first();
-
+        $verificationCode = VerificationCode::where('phone', $request->phone)->where('otp',  $request->otp)->first();
+          
         $now = now();
         if (!$verificationCode) {
             // return redirect()->back()->with('error', 'Your OTP is not correct');
@@ -138,7 +140,7 @@ class AuthController extends Controller
         $verificationCode->update([
             'expire_at' => now(),
         ]);
-        $user = User::where('phone',$request->phone)->first();
+        $user = User::where('phone', $request->phone)->first();
 
         if($user){
         $authToken = $user->createToken('auth-token')->plainTextToken;
@@ -149,9 +151,9 @@ class AuthController extends Controller
          }
          if(!$user){
             $user = new User;
-        $user->name = $request->name;
+        $user->name =  $request->name;
         $user->phone = $request->phone;
-        $user->password = bcrypt($request->password);
+        $user->password = bcrypt( $request->password);
         $user->save();
         $authToken = $user->createToken('auth-token')->plainTextToken;
 

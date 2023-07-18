@@ -47,11 +47,12 @@ class PropertiesController extends Controller
     }
 
     public function store(Request $request)
-    { 
+    {  
+        // dd($request);
         $validated = $request->validate([
             'posttype' => 'required|in:sale,rent',
             'property_type' => 'required|in:House,Villa,Apartment,Commercial,Land,Office',
-            'price' => 'required_if:posttype,sale|numeric',
+            'price' => 'required_if:posttype,sale',
             'monthly_rent' => 'required_if:posttype,rent|numeric',
             'max_duration' => 'required_if:posttype,rent|integer',
             'view_plan_id' => 'integer|exists:view_plans,id',
@@ -62,7 +63,7 @@ class PropertiesController extends Controller
             'bathroom_count' => 'required_if:property_type,House,Villa,Apartment,Commercial,Office|integer',
             'kitchen_count' => 'required_if:property_type,House,Villa,Apartment,Commercial,Office|integer',
             'storey' => 'required_if:property_type,House,Villa,Apartment,Commercial,Office|integer',
-            'area' => 'required|numeric',
+            'area' => 'required',
             'about' => 'required|string|max:500',
             'balkony' => 'integer',
             'gym' => 'boolean',
@@ -74,6 +75,7 @@ class PropertiesController extends Controller
             'security_gard' => 'boolean',
             'garden' => 'boolean',
         ]); 
+        
            
         if ($validated['property_type'] == 'Land') {
             $property = new Land;
@@ -139,7 +141,8 @@ class PropertiesController extends Controller
             $post->property_id = $property['id'];
             $post->price = $validated['price'];
             $post->view_plan_id = $validated['view_plan_id'] ??null ;
-            
+            if ($post->save()) {
+                $post = SalePost::with('property')->findOrFail($post->id);}
         } else {
             $post = new RentPost;
             $post->user_id = $validated['user_id'];
@@ -148,17 +151,17 @@ class PropertiesController extends Controller
             $post->monthly_rent = $validated['monthly_rent'];
             $post->max_duration = $validated['max_duration'];
             $post->view_plan_id = $validated['view_plan_id'] ??null ;
-           
+            if ($post->save()) {
+                $post = RentPost::with('property')->findOrFail($post->id);}
         }
         
-        if ($post->save()) {
-            $post = RentPost::with('property')->findOrFail($post->id);
+
     
             return response([
                 'status' => true,
                 'post' => $post,
             ]);
-        }
+        
     }
 
     public function show(Request $request, $id)
@@ -174,59 +177,43 @@ class PropertiesController extends Controller
 
     public function update(Request $request , $id)
     { 
-    //   if($request->price){
-    //     $post = SalePost::with('property')->findOrFail($id);
-    //     $post->update($request->all());
-
-    //   }
-    //   if($request->monthly_rent||$request->max_duration){
-    //     $post = RentPost::with('property')->findOrFail($id);
-    //     $post->update($request->all());
-   
-        
-    //   }
-            
-
-    //     if ($post) {
-    //         $property = $post->property;
-    //         if ($property) {
-    //             $property->update($request->all());
-    //         }
-    //         $post->update($request->all());
-    //     }
-    //     return response([
-    //         'status' => true,
-    //         'post' => $post,
-    //     ]);
-
-
-
-    //             // Retrieve the post by ID
-    // $post = SalePost::with('property')->findOrFail($id);
-
-    // // Retrieve the related property
-    // $property = $post->property;
-
-    // // Update the post attributes
-    // $post->update($request->all());
-
-    // // Update the property attributes
-    // $property->update($request->all());
-
-    // // Return a response with the updated post and property data
-    // return response([
-    //     'status' => true,
-    //     'post' => $post,
-    //     'property' => $property,
-    // ]);
-
+    
+    // dd($request);
+    $validated = $request->validate([
+        'posttype' => 'in:sale,rent',
+        'property_type' => 'in:House,Villa,Apartment,Commercial,Land,Office',
+        'price' => 'numeric',
+        'monthly_rent' => 'numeric',
+        'max_duration' => 'integer',
+        'view_plan_id' => 'integer|exists:view_plans,id',
+        'user_id' => 'exists:users,id',
+        'name' => 'string',
+        'address' => 'string',
+        'room_count' => 'integer',
+        'bathroom_count' => 'integer',
+        'kitchen_count' => 'integer',
+        'storey' => 'integer',
+        'area' => 'numeric',
+        'about' => 'string|max:500',
+        'balkony' => 'integer',
+        'gym' => 'boolean',
+        'pool' => 'boolean',
+        'parking' => 'boolean',
+        'security_cameras' => 'boolean',
+        'elevator' => 'boolean',
+        'Wi-Fi' => 'boolean',
+        'security_gard' => 'boolean',
+        'garden' => 'boolean',
+    ]); 
+    dd($validated);
+    
          // Retrieve the post by ID
     $post = SalePost::findOrFail($id);
 
     // Check if the request data includes any post attributes
     $postAttributes = array_intersect_key($request->all(), $post->getAttributes());
     $hasPostAttributes = !empty($postAttributes);
-
+       
     // Check if the request data includes any property attributes
     $propertyAttributes = array_intersect_key($request->all(), $post->property->getAttributes());
     $hasPropertyAttributes = !empty($propertyAttributes);
@@ -341,3 +328,49 @@ class PropertiesController extends Controller
         return ($favs->toJSON());
     }
 }
+ ///////////////////update
+ //   if($request->price){
+    //     $post = SalePost::with('property')->findOrFail($id);
+    //     $post->update($request->all());
+
+    //   }
+    //   if($request->monthly_rent||$request->max_duration){
+    //     $post = RentPost::with('property')->findOrFail($id);
+    //     $post->update($request->all());
+   
+        
+    //   }
+            
+
+    //     if ($post) {
+    //         $property = $post->property;
+    //         if ($property) {
+    //             $property->update($request->all());
+    //         }
+    //         $post->update($request->all());
+    //     }
+    //     return response([
+    //         'status' => true,
+    //         'post' => $post,
+    //     ]);
+
+
+
+    //             // Retrieve the post by ID
+    // $post = SalePost::with('property')->findOrFail($id);
+
+    // // Retrieve the related property
+    // $property = $post->property;
+
+    // // Update the post attributes
+    // $post->update($request->all());
+
+    // // Update the property attributes
+    // $property->update($request->all());
+
+    // // Return a response with the updated post and property data
+    // return response([
+    //     'status' => true,
+    //     'post' => $post,
+    //     'property' => $property,
+    // ]);
