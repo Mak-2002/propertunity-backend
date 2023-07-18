@@ -68,7 +68,7 @@ class AuthController extends Controller
     //send the otp 2222222
     public function sendSMS(string $phone)
     {   
-        $basic = new \Vonage\Client\Credentials\Basic("ee1556fd", "P5eaWOJvY1kKp6GY");
+        $basic = new \Vonage\Client\Credentials\Basic("9d3f82fc", "D6EPxByXtmjr0bUU");
         $client = new \Vonage\Client($basic);
        // $user = User::where('id', $id)->first();
     //    $phone=$user->phone;
