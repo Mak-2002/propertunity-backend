@@ -48,7 +48,7 @@ class PropertiesController extends Controller
 
     public function store(Request $request)
     {  
-        // dd($request);
+        
         $validated = $request->validate([
             'posttype' => 'required|in:sale,rent',
             'property_type' => 'required|in:House,Villa,Apartment,Commercial,Land,Office',
@@ -163,7 +163,7 @@ class PropertiesController extends Controller
             ]);
         
     }
-
+    
     public function show(Request $request, $id)
     {
         if ($request->posttype == 'sale') {
@@ -234,7 +234,7 @@ class PropertiesController extends Controller
     }
 
     public function destroy(Request $request, $id)
-    {
+    { 
         if ($request->posttype == 'sale') {
             $property = SalePost::where('id', $id)->with('property');
             $property->delete();

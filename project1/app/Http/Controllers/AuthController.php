@@ -12,12 +12,14 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     public function register(Request $request)
-    { 
-        $request->validate([
-            'name' => 'required',
-            'phone' => ['required','unique:users', 'regex:/^[0-9]+$/'],
+     {  
+       
+        $var = $request->validate([
+            'name' => 'required|string',
+            'phone' => ['required','unique:users', 'regex:/^[0-9+]+$/'],
             'password' => 'min:6',
         ]);
+       
        // $authToken = $user->createToken('auth-token')->plainTextToken;
         $sms=$this->sendSMS($request->phone);
         return response([
@@ -41,9 +43,9 @@ class AuthController extends Controller
     ///login screen 1111111
     public function login(Request $request)
     {
-      
+
         request()->validate([
-            'phone' => ['required', 'regex:/^[0-9]+$/'],
+            'phone' => ['required', 'regex:/^[0-9+]+$/'],
             'password' => 'min:6',
         ]);
 
@@ -114,13 +116,14 @@ class AuthController extends Controller
     public function verification(Request $request)
     { 
         #Validation
-        $request->validate([
+        $v=$request->validate([
             'name' => 'required',
-            'phone' => ['required', 'regex:/^[0-9]+$/'],
+            'phone' => ['required', 'regex:/^[0-9+]+$/'],
             'otp' => ['required','regex:/^[0-9]+$/','digits:6'],
             'password' => 'min:6',
         ]);
-        
+ 
+
         #Validation Logic
         $verificationCode = VerificationCode::where('phone', $request->phone)->where('otp',  $request->otp)->first();
           
