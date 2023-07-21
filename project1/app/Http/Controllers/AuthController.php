@@ -24,6 +24,7 @@ class AuthController extends Controller
         $sms=$this->sendSMS($request->phone);
         return response([
             'success' => true,
+            'message' => 'Waiting for OTP Verification',
             // 'access_token' => $authToken,
         ]);
     }
@@ -36,6 +37,7 @@ class AuthController extends Controller
         $u->tokens()->delete();
         return response()->json([
             'status' => true,
+            'message' => 'logged out successfully',
         ]);
 
     }
@@ -51,9 +53,8 @@ class AuthController extends Controller
 
         $fields = request(['phone', 'password']);
         if (!auth()->attempt($fields)) {
-            return response([
-                'status' => false,
-            ]);
+            return response()->json(['status' => false,'message' => 'Invalid credentials'], 401);
+            // Edited by qusai to return response code 401 (unauthorized) when entering wrong credentials
         }
 
         $user = User::where('phone', $request->phone)->first();
@@ -61,8 +62,8 @@ class AuthController extends Controller
 
         return response([
             'status' => true,
+            'message' => 'logged in successfully',
             'access_token' => $authToken
-          
         ]);
         
     }
@@ -102,10 +103,11 @@ class AuthController extends Controller
 
         if ($message->getStatus() == 0) {
             return ([
-                'status' => 'true',
+                'status' => true,
                 'otp' => $otp,
             ]);
         } else {
+            //TODO: should it return a response ?
             echo "The message failed with status: " . $message->getStatus() . "\n";
         }
         
@@ -128,16 +130,19 @@ class AuthController extends Controller
         $verificationCode = VerificationCode::where('phone', $request->phone)->where('otp',  $request->otp)->first();
           
         $now = now();
+        $response = new \Illuminate\Http\Response;
+        $response->setStatusCode(401);
+        $data = [
+            'status' => false
+        ];
         if (!$verificationCode) {
             // return redirect()->back()->with('error', 'Your OTP is not correct');
-            return response([
-                'status' => 'Your OTP is not correct',
-            ]);
+            $data['message'] = 'Your OTP is not correct';
+            return $response->json($data);
         } elseif ($verificationCode && $now->isAfter($verificationCode->expire_at)) {
             // return redirect()->route('otp.login')->with('error', 'Your OTP has been expired');
-            return response([
-                'status' => 'Your OTP has been expired',
-            ]);
+            $data['message'] = 'Your OTP has been expired';
+            return $response->json($data);
         }
         // Expire The OTP
         $verificationCode->update([
@@ -149,6 +154,7 @@ class AuthController extends Controller
         $authToken = $user->createToken('auth-token')->plainTextToken;
         return response()->json([
             'status' => true,
+            'message' => 'User verefied successfully',
             'access_token' => $authToken,
         ]);
          }
@@ -162,6 +168,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => true,
+            'message' => 'User created and verefied successfully',
             'access_token' => $authToken,
         ]);
          }
