@@ -19,12 +19,19 @@ class AuthController extends Controller
             'phone' => ['required','unique:users', 'regex:/^[0-9+]+$/'],
             'password' => 'min:6',
         ]);
+
+        // we will assume that frontend checked for all rules except for uniqueness
+        if(!$var)
+            return response()->json([
+                'status' => false,
+                'message' => 'A user with the entered phone number already exists',
+            ], 401);
        
        // $authToken = $user->createToken('auth-token')->plainTextToken;
         $sms=$this->sendSMS($request->phone);
         return response([
-            'success' => true,
-            'message' => 'Waiting for OTP Verification',
+            'status' => true,
+            'message' => 'Waiting for OTP verification',
             // 'access_token' => $authToken,
         ]);
     }
@@ -88,7 +95,8 @@ class AuthController extends Controller
         else{
         $verificationCode = VerificationCode::create([
             'phone' => $phone,
-            'otp' => rand(111111, 999999),
+            'otp' => 111111, // DEBUG: Set by qusai for testing purpose
+            // 'otp' => rand(111111, 999999), //PRODUCTION
             'expire_at' => now()->addMinutes(10),
         ]);
            $otp= $verificationCode->otp;
@@ -140,8 +148,8 @@ class AuthController extends Controller
             $data['message'] = 'Your OTP is not correct';
             return $response->json($data);
         } elseif ($verificationCode && $now->isAfter($verificationCode->expire_at)) {
-            // return redirect()->route('otp.login')->with('error', 'Your OTP has been expired');
-            $data['message'] = 'Your OTP has been expired';
+            // return redirect()->route('otp.login')->with('error', 'Your OTP has expired');
+            $data['message'] = 'Your OTP has expired';
             return $response->json($data);
         }
         // Expire The OTP
