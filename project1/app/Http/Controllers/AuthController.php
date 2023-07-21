@@ -40,8 +40,8 @@ class AuthController extends Controller
     {
 
         $user = Auth::user();
-        $u = User::where('id', $user->id)->first();
-        $u->tokens()->delete();
+        $user->tokens()->delete();
+        Auth::logout();
         return response()->json([
             'status' => true,
             'message' => 'logged out successfully',
@@ -64,7 +64,7 @@ class AuthController extends Controller
             // Edited by qusai to return response code 401 (unauthorized) when entering wrong credentials
         }
 
-        $user = User::where('phone', $request->phone)->first();
+        $user = Auth::user();
         $authToken = $user->createToken('auth-token')->plainTextToken;
 
         return response([
@@ -119,6 +119,7 @@ class AuthController extends Controller
             echo "The message failed with status: " . $message->getStatus() . "\n";
         }
         
+        //TODO: log in after registeration
         
     }
 
