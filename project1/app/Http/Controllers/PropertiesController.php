@@ -12,9 +12,22 @@ use App\Models\RentPost;
 use App\Models\SalePost;
 use App\Models\Villa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PropertiesController extends Controller
 {
+    
+    /**
+     * Retrieves all the property posts made by user
+     */
+    public function my_properties_index(){
+        $data = [
+            'sale_posts' => SalePost::where('user_id', Auth::user()->id)->latest,
+            'rent_posts' => RentPost::where('user_id', Auth::user()->id)->latest,
+        ];
+        return response($data);
+    }
+
     public function index(Request $request)
     {
         $max = $request->max;
