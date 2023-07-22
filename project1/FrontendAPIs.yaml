@@ -20,6 +20,7 @@ Register API:
             "message" : "A user with the entered phone number already exists"
         }
 
+/////////////////////////////////////////////////////////////////////
 
 Verification API:
     Description: Validates the OTP and creates user, or drops OTP and sends another one
@@ -36,7 +37,14 @@ Verification API:
         200: ok
         {
             "status" : 1,
-            "message" : "Waiting for OTP Verification"
+            "message" : "User verefied successfully",
+            "access_token" => "authToken"
+        }
+        201: created
+        {
+            "status" : 1,
+            "message" : "User created and verefied successfully",
+            "access_token" => "authToken"
         }
         401: unauthorized
         {
@@ -49,6 +57,7 @@ Verification API:
             "message" : "Your OTP has expired"
         }
 
+/////////////////////////////////////////////////////////////////////
 
 Log in API:
     Description: Logs user in
@@ -72,6 +81,9 @@ Log in API:
             "message" : "Invalid credentials"
         }
 
+
+/////////////////////////////////////////////////////////////////////
+
 Log out API:
     Description: Logs user out
     Endpoint URL: app_url/api/logout
@@ -83,15 +95,8 @@ Log out API:
         200: ok
         {
             "status" : 1,
-            "message" : "Waiting for OTP Verification"
+            "message" : "Logged out successfully"
         }
-        401: unauthorized
-        {
-            "status" : 0,
-            "message" : "Your OTP is not correct"
-        }
-        401: unauthorized
-        {
-            "status" : 0,
-            "message" : "Your OTP has expired"
-        }
+
+/////////////////////////////////////////////////////////////////////
+
