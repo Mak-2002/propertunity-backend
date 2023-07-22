@@ -69,7 +69,7 @@ class AuthController extends Controller
 
         return response([
             'status' => true,
-            'message' => 'logged in successfully',
+            'message' => 'Logged in successfully',
             'access_token' => $authToken
         ]);
         
@@ -179,10 +179,10 @@ class AuthController extends Controller
             'status' => true,
             'message' => 'User created and verefied successfully',
             'access_token' => $authToken,
-        ]);
-         }
+        ], 201);
+        }
 
-        /// return redirect()->route('otp.login')->with('error', 'Your Otp is not correct');
+        /// return redirect()->route('otp.login')->with('error', 'Your OTP is not correct');
     }
 
     // ///sending message 333333

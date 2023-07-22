@@ -28,6 +28,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('properties', PropertiesController::class);
     Route::resource('properties/{property}/images', PropertyImagesController::class);
+
+    
+    Route::get('myproperties', [PropertiesController::class, 'my_properties_index'])->name('my_properties');
     Route::get('favorites', [PropertiesController::class, 'favorites'])->name('properties.favorites');
     Route::post('properties/{post}/favorite', [PropertiesController::class, 'change_favorite_state'])->where('post', '[0-9]+')->name('properties.favorite');
     Route::post('/logout', [AuthController::class,'logout']);
@@ -38,10 +41,12 @@ Route::post('/login',[AuthController::class,'login'])->name('login');
 Route::get('verification', [AuthController::class , 'verification'])->name('verification'); 
 
 
-
-
 // Route::get('sendSMS', [AuthController::class , 'sendSMS']);
 // Route::get('generateOtp', [AuthController::class , 'generateOtp']);
 // Route::get('test', [PropertiesController::class , 'test']);
 // Route::get('test2', [PropertiesController::class , 'test2']);
 
+/* TODO:
+add images table to user
+add balance attribute to user
+*/
