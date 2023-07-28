@@ -42,9 +42,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function property()
-    {
-        return $this->hasMany(Property::class);
+    // public function property()
+    // {
+    //     return $this->hasMany(Property::class);
+    // }
+
+    public function sale_posts() {
+        return $this->hasMany(SalePost::class);
+    }
+
+    public function rent_posts() {
+        return $this->hasMany(RentPost::class);
     }
 
     public function favorite()

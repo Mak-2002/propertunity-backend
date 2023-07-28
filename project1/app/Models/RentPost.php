@@ -16,6 +16,11 @@ class RentPost extends Model
 
         // other sensitive attributes
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
     public function property()
     {
        // return $this->morphMany(House::class,'property');

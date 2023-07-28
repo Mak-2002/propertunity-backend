@@ -28,8 +28,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('properties', PropertiesController::class);
     Route::resource('properties/{property}/images', PropertyImagesController::class);
-
-    
     Route::get('myproperties', [PropertiesController::class, 'my_properties_index'])->name('my_properties');
     Route::get('favorites', [PropertiesController::class, 'favorites'])->name('properties.favorites');
     Route::post('properties/{post}/favorite', [PropertiesController::class, 'change_favorite_state'])->where('post', '[0-9]+')->name('properties.favorite');

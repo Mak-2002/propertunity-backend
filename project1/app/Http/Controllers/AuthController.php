@@ -122,7 +122,6 @@ class AuthController extends Controller
             //TODO: should it return a response ?
             echo "The message failed with status: " . $message->getStatus() . "\n";
         }
-        //TODO: log in after registeration   
     }
 
     //////verification of the otp 44444444
