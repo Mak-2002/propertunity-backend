@@ -11,19 +11,8 @@ class Office extends Model
     protected $guarded = [
 
     ];
-    // public function property()
-    // {
-    //     return $this->belongsTo(Property::class);
-    // }
-    public function rent()
-    {   
-       
-        return $this->morphMany(RentPost::class,'property');
-    }
 
-    public function sale()
-    {
-        return $this->morphMany(salePost::class,'property');
+    public function property(){
+        return $this->morphOne(Property::class, 'category');
     }
-
 }
