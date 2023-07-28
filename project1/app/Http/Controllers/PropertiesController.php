@@ -22,8 +22,8 @@ class PropertiesController extends Controller
      */
     public function my_properties_index(){
         $data = [
-            'sale_posts' => SalePost::where('user_id', Auth::user()->id)->latest,
-            'rent_posts' => RentPost::where('user_id', Auth::user()->id)->latest,
+            'sale_posts' => Auth::user()->sale_posts->latest,
+            'rent_posts' => Auth::user()->sale_posts->latest,
         ];
         return response($data);
     }
