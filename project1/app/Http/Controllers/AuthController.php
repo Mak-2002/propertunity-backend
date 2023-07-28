@@ -50,15 +50,13 @@ class AuthController extends Controller
     }
 
     ///login screen 1111111
-    public function login(Request $request)
+    public function login()
     {
-
-        request()->validate([
+        $fields = request()->validate([
             'phone' => ['required', 'regex:/^[0-9+]+$/'],
             'password' => 'min:6',
         ]);
 
-        $fields = request(['phone', 'password']);
         if (!auth()->attempt($fields)) {
             return response()->json(['status' => false,'message' => 'Invalid credentials'], 401);
             // Edited by qusai to return response code 401 (unauthorized) when entering wrong credentials
