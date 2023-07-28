@@ -77,10 +77,10 @@ class AuthController extends Controller
 
     //send the otp 2222222
     public function sendSMS(string $phone)
-    {   
+    {  
         $basic = new \Vonage\Client\Credentials\Basic("9d3f82fc", "D6EPxByXtmjr0bUU");
         $client = new \Vonage\Client($basic);
-       // $user = User::where('id', $id)->first();
+    // $user = User::where('id', $id)->first();
     //    $phone=$user->phone;
         # User Does not Have Any Existing OTP
         $verificationCode = VerificationCode::where('phone', $phone)->latest()->first();
@@ -99,7 +99,7 @@ class AuthController extends Controller
             // 'otp' => rand(111111, 999999), //PRODUCTION
             'expire_at' => now()->addMinutes(10),
         ]);
-           $otp= $verificationCode->otp;
+        $otp= $verificationCode->otp;
         }
         
         
@@ -118,9 +118,7 @@ class AuthController extends Controller
             //TODO: should it return a response ?
             echo "The message failed with status: " . $message->getStatus() . "\n";
         }
-        
-        //TODO: log in after registeration
-        
+        //TODO: log in after registeration   
     }
 
     //////verification of the otp 44444444
@@ -133,25 +131,23 @@ class AuthController extends Controller
             'otp' => ['required','regex:/^[0-9]+$/','digits:6'],
             'password' => 'min:6',
         ]);
- 
+        
 
         #Validation Logic
         $verificationCode = VerificationCode::where('phone', $request->phone)->where('otp',  $request->otp)->first();
           
         $now = now();
-        $response = new \Illuminate\Http\Response;
-        $response->setStatusCode(401);
         $data = [
             'status' => false
         ];
         if (!$verificationCode) {
             // return redirect()->back()->with('error', 'Your OTP is not correct');
             $data['message'] = 'Your OTP is not correct';
-            return $response->json($data);
-        } elseif ($verificationCode && $now->isAfter($verificationCode->expire_at)) {
+            return response($data, 401);
+        } elseif ($now->isAfter($verificationCode->expire_at)) {
             // return redirect()->route('otp.login')->with('error', 'Your OTP has expired');
             $data['message'] = 'Your OTP has expired';
-            return $response->json($data);
+            return response($data, 401);
         }
         // Expire The OTP
         $verificationCode->update([

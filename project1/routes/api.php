@@ -38,7 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 Route::post('/register',[AuthController::class,'register'])->name('register');
 Route::post('/login',[AuthController::class,'login'])->name('login');
-Route::get('verification', [AuthController::class , 'verification'])->name('verification'); 
+Route::post('verification', [AuthController::class , 'verification'])->name('verification'); 
 
 
 // Route::get('sendSMS', [AuthController::class , 'sendSMS']);
