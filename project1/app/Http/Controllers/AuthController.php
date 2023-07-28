@@ -52,10 +52,10 @@ class AuthController extends Controller
     }
 
     ///login screen 1111111
-    public function login()
+    public function login(Request $request)
     {
-
-        request()->validate([
+        // Qusai: used Laravel's validator to access Validator::fails() method
+        $validator = validator($request->only('phone', 'password'), [
             'phone' => ['required', 'regex:/^[0-9+]+$/'],
             'password' => 'min:6',
         ]);
