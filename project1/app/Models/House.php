@@ -11,10 +11,11 @@ class House extends Model
     protected $guarded = [
 
     ];
-    // public function property()
-    // {
-    //     return $this->belongsTo(Property::class);
-    // }
+    
+    public function property(){
+        return $this->morphOne(Property::class, 'category');
+    }
+
     public function rent()
     {   
         //return $this->morphTo();

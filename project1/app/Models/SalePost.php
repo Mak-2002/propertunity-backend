@@ -23,8 +23,7 @@ class SalePost extends Model
 
     public function property()
     {
-        return $this->morphTo();
-        // return $this->belongsTo(Apartment::class,Commercial::class,House::class,Land::class,Office::class,Villa::class);
+        return $this->hasOne(Property::class);
     }
 
     public function viewPlan()

@@ -14,17 +14,11 @@ return new class extends Migration
         Schema::create('commercials', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->string('name')->nullable();
             ///location
-            $table->text('address');
-            $table->text('about');
-            $table->string('360_view')->nullable();
-            $table->string('image_library')->nullable();
             $table->integer('room_count');
             $table->integer('bathroom_count');
             $table->integer('kitchen_count');
             $table->integer('storey');
-            $table->integer('area');
             $table->integer('balkony')->nullable();
             $table->boolean('parking')->nullable();
             $table->boolean('security_cameras')->nullable();
