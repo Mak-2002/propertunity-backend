@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('villas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            ///location
             $table->integer('room_count');
             $table->integer('bathroom_count');
             $table->integer('kitchen_count');

@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\{Apartment, Commercial, House, Land, Office, Villa};
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +18,20 @@ class PropertyFactory extends Factory
      */
     public function definition(): array
     {
+        $categoryType = $this->faker->randomElement(
+            [Villa::class, Land::class, Apartment::class, Commercial::class, House::class, Office::class]
+        );
+        $category = $categoryType::factory()->create();
         return [
-            //
+            'user_id' => User::factory(),
+            'name' => $this->faker->name,
+            'latitude' => $this->faker->latitude(),
+            'longitude' => $this->faker->longitude(),
+            'address' => $this->faker->address(),
+            'about' => $this->faker->text(),
+            'area' => $this->faker->randomFloat(),
+            'category_type' => $categoryType,
+            'category_id' => $category->id,
         ];
     }
 }

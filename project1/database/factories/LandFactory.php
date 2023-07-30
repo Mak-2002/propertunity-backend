@@ -18,13 +18,7 @@ class LandFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'=> User::factory(),
-            'name'=>$this->faker->name(),
-            'address'=>$this->faker->text,
-            'about'=>$this->faker->text,
-            '360_view'=>$this->faker->text,
-            'image_library'=>$this->faker->text,
-            'area'=>$this->faker->randomNumber()
+            //
         ];
     }
 }

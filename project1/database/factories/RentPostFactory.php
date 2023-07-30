@@ -45,8 +45,7 @@ class RentPostFactory extends Factory
             'monthly_rent'=>$this->faker->randomNumber(),
             'max_duration'=>$this->faker->randomDigitNot(0),
             'visibility'=>$this->faker->boolean,
-            'property_id' => $this->faker->randomNumber(1, 100),
-            'property_type' => $this->faker->randomElement(['Land', 'House', 'Apartment','Commercial','Office','Villa']),
+            'property_id' => Property::factory(),
         ];
     }
 }

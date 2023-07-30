@@ -11,8 +11,6 @@ class SalePost extends Model
     protected $guarded = [
         'id',
         'user_id',
-        'property_id',
-        'property_type',
 
         // other sensitive attributes
     ];

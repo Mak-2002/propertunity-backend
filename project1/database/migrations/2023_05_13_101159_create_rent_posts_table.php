@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('view_plan_id')->nullable();
-            $table->morphs('property');
+            $table->foreignId('property_id');
            // $table->string('property_type');
            // $table->unsignedBigInteger('property_id');
           //  $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
