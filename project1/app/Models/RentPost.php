@@ -59,8 +59,10 @@ class RentPost extends Model
         );
 
         $query->when($filters['rooms'] ?? false, fn ($query, $rooms) =>
-        $query->whereHasMorph('property', ['Office', 'House', 'Villa', 'Commercial', 'Apartment'], function ($query) use ($rooms) {
-            $query->where('room_count', $rooms);
+        $query->whereHas('property', function ($query) use ($rooms) {
+            $query->whereHasMorph('category', ['Office', 'House', 'Villa', 'Commercial', 'Apartment'], function ($query) use ($rooms) {
+                $query->where('room_count', $rooms);
+            });
         }));
 
         $query->when(isset($filters['area_min']) && isset($filters['area_max']), function ($query) use ($filters) {
