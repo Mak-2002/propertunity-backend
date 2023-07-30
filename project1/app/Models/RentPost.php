@@ -53,7 +53,9 @@ class RentPost extends Model
         $query->when(
             $filters['type'] ?? false,
             fn ($query, $type) =>
-            $query->where('property_type', $type)
+            $query->whereHas('property', function ($query) use ($type) {
+                $query->where('category_type', $type);
+            })
         );
 
         $query->when($filters['rooms'] ?? false, fn ($query, $rooms) =>
