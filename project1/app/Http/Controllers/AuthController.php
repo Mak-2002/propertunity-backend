@@ -83,6 +83,8 @@ class AuthController extends Controller
     public function sendSMS(string $phone)
     {
         $basic = new \Vonage\Client\Credentials\Basic("9d3f82fc", "D6EPxByXtmjr0bUU");
+      //  $basic = new \Vonage\Client\Credentials\Basic("a293b6b5", "Vmbeth6UAsoyEUnA");
+
         $client = new \Vonage\Client($basic);
         // $user = User::where('id', $id)->first();
         //    $phone=$user->phone;

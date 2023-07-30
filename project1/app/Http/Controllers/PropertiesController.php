@@ -8,6 +8,7 @@ use App\Models\Favorite;
 use App\Models\House;
 use App\Models\Land;
 use App\Models\Office;
+use App\Models\Property;
 use App\Models\RentPost;
 use App\Models\SalePost;
 use App\Models\Villa;
@@ -61,15 +62,16 @@ class PropertiesController extends Controller
 
     public function store(Request $request)
     {  
-        
         $validated = $request->validate([
             'posttype' => 'required|in:sale,rent',
             'property_type' => 'required|in:House,Villa,Apartment,Commercial,Land,Office',
-            'price' => 'required_if:posttype,sale',
+            'price' => 'required_if:posttype,sale|numeric',
             'monthly_rent' => 'required_if:posttype,rent|numeric',
             'max_duration' => 'required_if:posttype,rent|integer',
             'view_plan_id' => 'integer|exists:view_plans,id',
             'user_id' => 'required|exists:users,id',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
             'name' => 'required|string',
             'address' => 'required|string',
             'room_count' => 'required_if:property_type,House,Villa,Apartment,Commercial,Office|integer',
@@ -91,75 +93,85 @@ class PropertiesController extends Controller
         
            
         if ($validated['property_type'] == 'Land') {
-            $property = new Land;
-            $property->user_id = $validated['user_id'];
-            $property->name = $validated['name'];
-            $property->address = $validated['address'];
-            $property->area = $validated['area'];
-            $property->about = $validated['about'];
-            $property->save();
+            $category = new Land;
+            $category->save();
         } else {
             switch ($validated['property_type']) {
                 case 'House':
-                    $property = new House;
-                    $property->pool = $validated['pool'] ??null ;
-                    $property->garden = $validated['garden'] ?? null;
+                    $category = new House;
+                    $category->pool = $validated['pool'] ??null ;
+                    $category->garden = $validated['garden'] ?? null;
                     break;
                 case 'Villa':
-                    $property = new Villa;
-                    $property->gym = $validated['gym']??null;
-                    $property->pool = $validated['pool']??null;
-                    $property->garden = $validated['garden']??null;
-                    $property->security_gard = $validated['security_gard']??null;
+                    $category = new Villa;
+                    $category->gym = $validated['gym']??null;
+                    $category->pool = $validated['pool']??null;
+                    $category->garden = $validated['garden']??null;
+                    $category->security_gard = $validated['security_gard']??null;
 
                     break;
                 case 'Apartment':
-                    $property = new Apartment;
-                    $property->gym = $validated['gym']??null;
-                    $property->elevator = $validated['elevator']??null;
-                    $property->security_gard = $validated['security_gard']??null;
+                    $category = new Apartment;
+                    $category->gym = $validated['gym']??null;
+                    $category->pool = $validated['pool']??null;
+                    $category->elevator = $validated['elevator']??null;
+                    $category->security_gard = $validated['security_gard']??null;
                     break;
                 case 'Commercial':
-                    $property = new Commercial;
-                    $property->elevator = $validated['elevator']??null;
-                    $property->security_gard = $validated['security_gard']??null;
+                    $category = new Commercial;
+                    $category->elevator = $validated['elevator']??null;
+                    $category->security_gard = $validated['security_gard']??null;
                     break;
                 case 'Office':
-                    $property = new Office;
-                    $property->security_gard = $validated['security_gard']??null;
-                    $property->elevator = $validated['elevator']??null;
+                    $category = new Office;
+                    $category->security_gard = $validated['security_gard']??null;
+                    $category->elevator = $validated['elevator']??null;
                     break;
 
             }
 
+          //  $property->user_id = $validated['user_id'];
+          //  $property->name = $validated['name'];
+          //  $property->address = $validated['address'];
+            $category->room_count = $validated['room_count'];
+            $category->bathroom_count = $validated['bathroom_count'];
+            $category->kitchen_count = $validated['kitchen_count'];
+            $category->storey = $validated['storey'] ;
+           // $category->area = $validated['area'];
+           // $category->about = $validated['about'];
+            $category->balkony = $validated['balkony']??null;
+            $category->parking = $validated['parking']?? null;
+            $category->security_cameras = $validated['security_cameras']?? null;
+            // $category->[Wi-Fi] = $validated['Wi-Fi'];
+            $category->save();
+        }
+            $property = new Property;
             $property->user_id = $validated['user_id'];
             $property->name = $validated['name'];
+            $property->latitude = $validated['latitude'];
+            $property->longitude = $validated['longitude'];
             $property->address = $validated['address'];
-            $property->room_count = $validated['room_count'];
-            $property->bathroom_count = $validated['bathroom_count'];
-            $property->kitchen_count = $validated['kitchen_count'];
-            $property->storey = $validated['storey'] ;
-            $property->area = $validated['area'];
             $property->about = $validated['about'];
-            $property->balkony = $validated['balkony']??null;
-            $property->parking = $validated['parking']?? null;
-            $property->security_cameras = $validated['security_cameras']?? null;
-            // $property->[Wi-Fi] = $validated['Wi-Fi'];
+            $property->area = $validated['area'];
+            $property->category_type = $validated['property_type'];
+            $property->category_id = $category->id;
             $property->save();
-        }
+
+
         if ($validated['posttype'] == 'sale') {
             $post = new SalePost;
             $post->user_id = $validated['user_id'];
-            $post->property = $validated['property'];
+            $post->property_id = $property->id;
             $post->price = $validated['price'];
             $post->view_plan_id = $validated['view_plan_id'] ??null ;
+            
             if ($post->save()) {
-                $post = SalePost::with('property')->findOrFail($post->id);}
+               $post = SalePost::with('property')->findOrFail($post->id);
+            }
         } else {
             $post = new RentPost;
             $post->user_id = $validated['user_id'];
-            $post->property_type = $validated['property_type'];
-            $post->property_id = $property['id'];
+            $post->property_id = $property->id;
             $post->monthly_rent = $validated['monthly_rent'];
             $post->max_duration = $validated['max_duration'];
             $post->view_plan_id = $validated['view_plan_id'] ??null ;
@@ -168,7 +180,8 @@ class PropertiesController extends Controller
         }
         
 
-    
+        
+        
             return response([
                 'status' => true,
                 'post' => $post,
