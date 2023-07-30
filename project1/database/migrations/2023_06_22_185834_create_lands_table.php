@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('lands', function (Blueprint $table) {
             $table->id();
-           // $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->timestamps();
 
         });

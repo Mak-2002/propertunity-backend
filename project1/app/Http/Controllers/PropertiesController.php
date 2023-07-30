@@ -150,8 +150,7 @@ class PropertiesController extends Controller
         if ($validated['posttype'] == 'sale') {
             $post = new SalePost;
             $post->user_id = $validated['user_id'];
-            $post->property_type = $validated['property_type'];
-            $post->property_id = $property['id'];
+            $post->property = $validated['property'];
             $post->price = $validated['price'];
             $post->view_plan_id = $validated['view_plan_id'] ??null ;
             if ($post->save()) {

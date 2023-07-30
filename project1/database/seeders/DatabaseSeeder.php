@@ -10,6 +10,7 @@ use App\Models\Office;
 use App\Models\Apartment;
 use App\Models\Commercial;
 use App\Models\Land;
+use App\Models\Property;
 use App\Models\Rating;
 use App\Models\RatingAspect;
 use App\Models\RentPost;
@@ -32,25 +33,21 @@ class DatabaseSeeder extends Seeder
         User::factory(20)->create();
 
         // Properties Seeding
-        House::factory(10)->create();
-        Villa::factory(10)->create();
-        Office::factory(10)->create();
-        Apartment::factory(10)->create();
-        ViewPlan::factory(10)->create();
-        Land::factory(10)->create();
-        Commercial::factory(10)->create();
+        Property::factory(30)->create();
 
         // SalePosts Seeding
-        SalePost::factory(10)->create();
         SalePost::factory(2)->create([
             'user_id' => 2,
+            'property_id' => 1,
         ]);
+        SalePost::factory(10)->create();
 
         // RentPosts Seeding
-        RentPost::factory(10)->create();
-        RentPost::factory(3)->create([
-            'user_id' => 2
+        RentPost::factory(2)->create([
+            'user_id' => 2,
+            'property_id' => 1,
         ]);
+        RentPost::factory(10)->create();
 
         // ViewRequests Seeding
         ViewRequest::factory(5)->create([

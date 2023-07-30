@@ -18,17 +18,10 @@ class HouseFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'=> User::factory(),
-            'name'=>$this->faker->name(),
-            'address'=>$this->faker->text,
-            'about'=>$this->faker->text,
-            '360_view'=>$this->faker->text,
-            'image_library'=>$this->faker->text,
             'room_count'=>$this->faker->randomNumber(),
             'bathroom_count'=>$this->faker->randomNumber(),
             'kitchen_count'=>$this->faker->randomNumber(),
             'storey'=>$this->faker->randomNumber(),
-            'area'=>$this->faker->randomNumber(),
             'balkony'=>$this->faker->randomNumber(),
             'pool'=>$this->faker->boolean(),
             'parking'=>$this->faker->boolean(),

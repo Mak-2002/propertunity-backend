@@ -11,8 +11,6 @@ class RentPost extends Model
     protected $guarded = [
         'id',
         'user_id',
-        'property_id',
-        'property_type',
 
         // other sensitive attributes
     ];
@@ -24,7 +22,7 @@ class RentPost extends Model
 
     public function property()
     {
-        return $this->hasOne(Property::class);
+        return $this->belongsTo(Property::class);
     }
     public function viewPlan()
     {

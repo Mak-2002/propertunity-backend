@@ -47,9 +47,7 @@ class SalePostFactory extends Factory
             'user_id'=>User::factory(),
             'price'=>$this->faker->randomNumber(),
             'visibility'=>$this->faker->boolean,
-            'property_id' => $this->faker->randomNumber(1, 100),
-            'property_type' => $this->faker->randomElement(['Land', 'House', 'Apartment','Commercial','Office','Villa']),
-
+            'property_id' => Property::factory(),
         ];
     }
 }
