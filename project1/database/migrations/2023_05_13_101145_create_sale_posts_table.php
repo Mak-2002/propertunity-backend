@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('sale_posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-           
             $table->foreignId('view_plan_id')->nullable();
             $table->foreignId('property_id');
             //$table->string('property_type');

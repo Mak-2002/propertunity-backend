@@ -1,0 +1,300 @@
+[
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "\/",
+        "name": null,
+        "action": "Closure",
+        "middleware": [
+            "web"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "_ignition\/execute-solution",   
+        "name": "ignition.executeSolution",
+        "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\ExecuteSolutionController",
+        "middleware": [
+            "Spatie\\LaravelIgnition\\Http\\Middleware\\RunnableSolutionsEnabled"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "_ignition\/health-check",
+        "name": "ignition.healthCheck",
+        "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\HealthCheckController",
+        "middleware": [
+            "Spatie\\LaravelIgnition\\Http\\Middleware\\RunnableSolutionsEnabled"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "_ignition\/update-config",
+        "name": "ignition.updateConfig",
+        "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\UpdateConfigController",
+        "middleware": [
+            "Spatie\\LaravelIgnition\\Http\\Middleware\\RunnableSolutionsEnabled"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "api\/favorites",
+        "name": "properties.favorites",
+        "action": "App\\Http\\Controllers\\PropertiesController@favorites",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "api\/login",
+        "name": "login",
+        "action": "App\\Http\\Controllers\\AuthController@login",
+        "middleware": [
+            "api"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "api\/logout",
+        "name": null,
+        "action": "App\\Http\\Controllers\\AuthController@logout",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "api\/myproperties",
+        "name": "my_properties",
+        "action": "App\\Http\\Controllers\\PropertiesController@my_properties_index",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "api\/properties",
+        "name": "properties.index",
+        "action": "App\\Http\\Controllers\\PropertiesController@index",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "api\/properties",
+        "name": "properties.store",
+        "action": "App\\Http\\Controllers\\PropertiesController@store",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "api\/properties\/create",
+        "name": "properties.create",
+        "action": "App\\Http\\Controllers\\PropertiesController@create",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "api\/properties\/{post}\/favorite",
+        "name": "properties.favorite",
+        "action": "App\\Http\\Controllers\\PropertiesController@change_favorite_state",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "api\/properties\/{property}",
+        "name": "properties.show",
+        "action": "App\\Http\\Controllers\\PropertiesController@show",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "PUT|PATCH",
+        "uri": "api\/properties\/{property}",
+        "name": "properties.update",
+        "action": "App\\Http\\Controllers\\PropertiesController@update",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "DELETE",
+        "uri": "api\/properties\/{property}",
+        "name": "properties.destroy",
+        "action": "App\\Http\\Controllers\\PropertiesController@destroy",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "api\/properties\/{property}\/edit",
+        "name": "properties.edit",
+        "action": "App\\Http\\Controllers\\PropertiesController@edit",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "api\/properties\/{property}\/images",
+        "name": "images.index",
+        "action": "App\\Http\\Controllers\\PropertyImagesController@index",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "api\/properties\/{property}\/images",
+        "name": "images.store",
+        "action": "App\\Http\\Controllers\\PropertyImagesController@store",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "api\/properties\/{property}\/images\/create",
+        "name": "images.create",
+        "action": "App\\Http\\Controllers\\PropertyImagesController@create",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "api\/properties\/{property}\/images\/{image}",
+        "name": "images.show",
+        "action": "App\\Http\\Controllers\\PropertyImagesController@show",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "PUT|PATCH",
+        "uri": "api\/properties\/{property}\/images\/{image}",
+        "name": "images.update",
+        "action": "App\\Http\\Controllers\\PropertyImagesController@update",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "DELETE",
+        "uri": "api\/properties\/{property}\/images\/{image}",
+        "name": "images.destroy",
+        "action": "App\\Http\\Controllers\\PropertyImagesController@destroy",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "api\/properties\/{property}\/images\/{image}\/edit",
+        "name": "images.edit",
+        "action": "App\\Http\\Controllers\\PropertyImagesController@edit",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "api\/register",
+        "name": "register",
+        "action": "App\\Http\\Controllers\\AuthController@register",
+        "middleware": [
+            "api"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "api\/verification",
+        "name": "verification",
+        "action": "App\\Http\\Controllers\\AuthController@verification",
+        "middleware": [
+            "api"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "sanctum\/csrf-cookie",
+        "name": "sanctum.csrf-cookie",
+        "action": "Laravel\\Sanctum\\Http\\Controllers\\CsrfCookieController@show",
+        "middleware": [
+            "web"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "sendSMS",
+        "name": null,
+        "action": "App\\Http\\Controllers\\AuthController@sendSMS",
+        "middleware": [
+            "web"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "sendSMS1",
+        "name": null,
+        "action": "App\\Http\\Controllers\\AuthController@index",
+        "middleware": [
+            "web"
+        ]
+    }
+]

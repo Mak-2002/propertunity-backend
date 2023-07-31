@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('property_id');
-            $table->text('path');
+            $table->text('url');
         });
     }
 

@@ -15,6 +15,12 @@ class RentPost extends Model
         // other sensitive attributes
     ];
 
+    public function toArray() {
+        $data = parent::toArray();
+        $data['post_type'] = 'rent_post';
+        return $data;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

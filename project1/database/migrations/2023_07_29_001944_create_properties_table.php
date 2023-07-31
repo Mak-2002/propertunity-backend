@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('360_view')->nullable();
             $table->integer('area');
             $table->morphs('category'); 
+
+            $table->integer('image_count')->default(0);
         });
     }
 
