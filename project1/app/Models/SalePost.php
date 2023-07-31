@@ -49,10 +49,10 @@ class SalePost extends Model
         $query->where('address', 'like', '%' . $search_phrase . '%')));
 
         $query->when(
-            $filters['type'] ?? false,
-            fn ($query, $type) =>
-            $query->whereHas('property', function ($query) use ($type) {
-                $query->where('category_type', $type);
+            $filters['category'] ?? false,
+            fn ($query, $category) =>
+            $query->whereHas('property', function ($query) use ($category) {
+                $query->where('category_type', $category);
             })
         );
 

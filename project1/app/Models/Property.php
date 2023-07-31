@@ -15,7 +15,8 @@ class Property extends Model
     public function toArray() {
 
         $data = parent::toArray(); // default Property attributes
-        $data['category_type'] = class_basename($data['category_type']);
+        $data['category'] = class_basename($data['category_type']);
+        unset($data['category_type']);
         $added = $this->category->toArray(); // attributes from category child relation
         return array_merge($data, $added);
     }

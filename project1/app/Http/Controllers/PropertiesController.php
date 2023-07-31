@@ -35,7 +35,7 @@ class PropertiesController extends Controller
     {
         $filters = [
             'search' => $request->search,
-            'type' => $request->type,
+            'category' => $request->category,
             'rooms' => $request->rooms,
             'area_min' => $request->area_min,
             'area_max' => $request->area_max,
@@ -55,7 +55,7 @@ class PropertiesController extends Controller
         }
         $posts = $posts->filter($filters)->with('property')->get();
         // dd($posts);
-        return response()->json($posts);
+        return response($posts);
     }
 
     public function store(Request $request)
