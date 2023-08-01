@@ -13,10 +13,9 @@ class Property extends Model
     protected $without = ['category'];
 
     public function toArray() {
-
         $data = parent::toArray(); // default Property attributes
         $data['category'] = class_basename($data['category_type']);
-        unset($data['category_type']);
+        unset($data['category_type']); // Renaming 'category_type' to 'category'
         $added = $this->category->toArray(); // attributes from category child relation
         return array_merge($data, $added);
     }

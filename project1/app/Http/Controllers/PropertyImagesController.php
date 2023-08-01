@@ -21,15 +21,21 @@ class PropertyImagesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $property)
     {
-        $property = Property::findOrFail($request->property_id);
+        $property = Property::findOrFail($property);
         $uploaded_image = $request->file('image');
-        $property->increment('image_count');
-        $path = $uploaded_image->store('images');
-        $url = asset($path);
-        $image = $property->images()->create([
-            'url' => $url
+        $ext = $uploaded_image->getClientOriginalExtension();
+        $image_object = $property->image_urls()->create(['url'=>'']);
+        $file_name = $image_object->id.'.'.$ext;
+        $file_name = $uploaded_image->storeAs('public/images', $file_name);
+        $url = asset('storage/images/'.basename($file_name));
+        $image_object->url = $url;
+        $image_object->save();
+        return response([
+            'status' => true,
+            'message' => 'image stored successfully',
+            'url' => $image_object->url,
         ]);
     }
 
