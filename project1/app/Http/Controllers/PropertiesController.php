@@ -189,7 +189,7 @@ class PropertiesController extends Controller
         else if ($request->posttype == 'rent')
             $post = RentPost::findOrFail($post);
 
-        return response($post->with('property')->toArray());
+        return response($post);
     }
 
     public function update(Request $request, $post)
