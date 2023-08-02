@@ -22,11 +22,16 @@ class PropertiesController extends Controller
     /**
      * Retrieves all the property posts made by user
      */
-    public function my_properties_index()
+    public function my_posts_index()
     {
+        $user_id = Auth::user()->id;
         $data = [
-            'sale_posts' => Auth::user()->sale_posts->latest,
-            'rent_posts' => Auth::user()->sale_posts->latest,
+            'sale_posts' => SalePost::whereHas('user', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })->get(),
+            'rent_posts' => RentPost::whereHas('user', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })->get(),
         ];
         return response($data);
     }
@@ -67,7 +72,6 @@ class PropertiesController extends Controller
             'monthly_rent' => 'required_if:posttype,rent|numeric',
             'max_duration' => 'required_if:posttype,rent|integer',
             'view_plan_id' => 'integer|exists:view_plans,id',
-            'user_id' => 'required|exists:users,id',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'name' => 'required|string',
@@ -143,7 +147,7 @@ class PropertiesController extends Controller
             $category->save();
         }
         $property = new Property;
-        $property->user_id = $validated['user_id'];
+        $property->user_id = Auth::user()->id;
         $property->name = $validated['name'];
         $property->latitude = $validated['latitude'];
         $property->longitude = $validated['longitude'];
@@ -154,27 +158,21 @@ class PropertiesController extends Controller
         $property->category_id = $category->id;
         $property->save();
 
-
         if ($validated['posttype'] == 'sale') {
             $post = new SalePost;
-            $post->user_id = $validated['user_id'];
+            $post->user_id = Auth::user()->id;
             $post->property_id = $property->id;
             $post->price = $validated['price'];
             $post->view_plan_id = $validated['view_plan_id'] ?? null;
-
-            if ($post->save()) {
-                $post = SalePost::with('property')->findOrFail($post->id);
-            }
+            $post->save();
         } else {
             $post = new RentPost;
-            $post->user_id = $validated['user_id'];
+            $post->user_id = Auth::user()->id;
             $post->property_id = $property->id;
             $post->monthly_rent = $validated['monthly_rent'];
             $post->max_duration = $validated['max_duration'];
             $post->view_plan_id = $validated['view_plan_id'] ?? null;
-            if ($post->save()) {
-                $post = RentPost::with('property')->findOrFail($post->id);
-            }
+            $post->save();
         }
         return response([
             'status' => true,
@@ -204,7 +202,6 @@ class PropertiesController extends Controller
             'monthly_rent' => 'numeric',
             'max_duration' => 'integer',
             'view_plan_id' => 'integer|exists:view_plans,id',
-            'user_id' => 'exists:users,id',
             'name' => 'string',
             'address' => 'string',
             'room_count' => 'integer',
@@ -223,7 +220,6 @@ class PropertiesController extends Controller
             'security_gard' => 'boolean',
             'garden' => 'boolean',
         ]);
-        dd($validated);
 
         // Retrieve the post by ID
         $post = SalePost::findOrFail($post);
@@ -253,17 +249,17 @@ class PropertiesController extends Controller
 
     public function destroy(Request $request, $post)
     {
-        if ($request->posttype == 'sale') {
-            $property = SalePost::where('id', $post)->with('property');
-            $property->delete();
-            return ('deleted successfully');
-        }
+        if ($request->posttype == 'sale')
+            $property = SalePost::findOrFail($post)->with('property');
 
-        if ($request->posttype == 'rent') {
-            $property = RentPost::where('id', $post)->with('property');
-            $property->delete();
-            return ('deleted successfully');
-        }
+        if ($request->posttype == 'rent')
+            $property = RentPost::findOrFail($post)->with('property');
+
+        $property->delete();
+        return response([
+            'status' => true,
+            'message' => 'Post deleted successfully',
+        ]);
     }
 
     public function favorites(request $request)
@@ -273,7 +269,7 @@ class PropertiesController extends Controller
             $favs = SalePost::whereHas(
                 'favorable_by',
                 fn ($query) =>
-                $query->where('user_id', $request->id)
+                $query->where('user_id', Auth::user()->id)
             )->with('property')->get();
         }
 
@@ -281,7 +277,7 @@ class PropertiesController extends Controller
             $favs = RentPost::whereHas(
                 'favorable_by',
                 fn ($query) =>
-                $query->where('user_id', $request->id)
+                $query->where('user_id', Auth::user()->id)
             )->with('property')->get();
         }
 
