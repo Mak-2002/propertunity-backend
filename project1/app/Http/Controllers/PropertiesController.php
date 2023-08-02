@@ -63,6 +63,7 @@ class PropertiesController extends Controller
         return response($posts);
     }
 
+    // todo: this method's not working @kareem-zd
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -110,7 +111,6 @@ class PropertiesController extends Controller
                     $category->pool = $validated['pool'] ?? null;
                     $category->garden = $validated['garden'] ?? null;
                     $category->security_gard = $validated['security_gard'] ?? null;
-
                     break;
                 case 'Apartment':
                     $category = new Apartment;
@@ -154,8 +154,9 @@ class PropertiesController extends Controller
         $property->address = $validated['address'];
         $property->about = $validated['about'];
         $property->area = $validated['area'];
-        $property->category_type = $validated['property_type'];
-        $property->category_id = $category->id;
+        $property->setRelation('category', $category);
+        // $property->category_type = $validated['property_type'];
+        // $property->category_id = $category->id;
         $property->save();
 
         if ($validated['posttype'] == 'sale') {
