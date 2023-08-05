@@ -40,7 +40,7 @@ class PropertiesController extends Controller
     {
         $filters = [
             'search' => $request->search,
-            'category' => $request->category,
+            'category' => ucfirst($request->category),
             'rooms' => $request->rooms,
             'area_min' => $request->area_min,
             'area_max' => $request->area_max,

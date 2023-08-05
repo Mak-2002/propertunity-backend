@@ -31,7 +31,9 @@ class AuthController extends Controller
             ], 401);
 
         // $authToken = $user->createToken('auth-token')->plainTextToken;
-        $sms = $this->sendSMS($request->phone);
+
+        
+        // $sms = $this->sendSMS($request->phone); //DEBUG
         return response([
             'status' => true,
             'message' => 'Waiting for OTP verification',

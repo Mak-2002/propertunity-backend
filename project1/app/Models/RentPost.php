@@ -15,9 +15,13 @@ class RentPost extends Model
         // other sensitive attributes
     ];
 
+    protected $with = [
+        'property'
+    ];
+
     public function toArray() {
         $data = parent::toArray();
-        $data['post_type'] = 'rent_post';
+        $data['post_type'] = 'rent';
         return $data;
     }
 
@@ -60,7 +64,7 @@ class RentPost extends Model
             $filters['category'] ?? false,
             fn ($query, $category) =>
             $query->whereHas('property', function ($query) use ($category) {
-                $query->where('category_type', $category);
+                $query->where('category_type', 'App\\Models\\'.$category);
             })
         );
 

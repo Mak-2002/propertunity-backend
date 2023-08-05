@@ -15,9 +15,13 @@ class SalePost extends Model
         // other sensitive attributes
     ];
 
+    protected $with = [
+        'property'
+    ];
+
     public function toArray() {
         $data = parent::toArray();
-        $data['post_type'] = 'sale_post';
+        $data['post_type'] = 'sale';
         return $data;
     }
 
@@ -52,7 +56,7 @@ class SalePost extends Model
             $filters['category'] ?? false,
             fn ($query, $category) =>
             $query->whereHas('property', function ($query) use ($category) {
-                $query->where('category_type', $category);
+                $query->where('category_type', 'App\\Models\\'.$category);
             })
         );
 
