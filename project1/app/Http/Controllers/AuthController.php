@@ -32,8 +32,8 @@ class AuthController extends Controller
 
         // $authToken = $user->createToken('auth-token')->plainTextToken;
 
-        
-        // $sms = $this->sendSMS($request->phone); //DEBUG
+
+        $sms = $this->sendSMS($request->phone); //DEBUG
         return response([
             'status' => true,
             'message' => 'Waiting for OTP verification',
@@ -84,10 +84,10 @@ class AuthController extends Controller
     //send the otp 2222222
     public function sendSMS(string $phone)
     {
-        $basic = new \Vonage\Client\Credentials\Basic("9d3f82fc", "D6EPxByXtmjr0bUU");
+        //$basic = new \Vonage\Client\Credentials\Basic("9d3f82fc", "D6EPxByXtmjr0bUU"); //DEBUG
       //  $basic = new \Vonage\Client\Credentials\Basic("a293b6b5", "Vmbeth6UAsoyEUnA");
 
-        $client = new \Vonage\Client($basic);
+        // $client = new \Vonage\Client($basic); //DEBUG
         // $user = User::where('id', $id)->first();
         //    $phone=$user->phone;
         # User Does not Have Any Existing OTP
@@ -111,24 +111,23 @@ class AuthController extends Controller
         }
 
 
-        $response = $client->sms()->send(
-            new \Vonage\SMS\Message\SMS($phone, 'hi', $otp)
-        );
+        // $response = $client->sms()->send( //DEBUG
+        //     new \Vonage\SMS\Message\SMS($phone, 'hi', $otp)
+        // );
 
-        $message = $response->current();
+        // $message = $response->current();
 
-        if ($message->getStatus() == 0) {
-            return ([
-                'status' => true,
-                'otp' => $otp,
-            ]);
-        } else {
-            //TODO: should it return a response ?
-            echo "The message failed with status: " . $message->getStatus() . "\n";
-        }
+        // if ($message->getStatus() == 0) {
+        //     return ([
+        //         'status' => true,
+        //         'otp' => $otp,
+        //     ]);
+        // } else {
+        //     //TODO: should it return a response ?
+        //     echo "The message failed with status: " . $message->getStatus() . "\n";
+        // }
     }
 
-    //////verification of the otp 44444444
     public function verification(Request $request)
     {
         #Validation
