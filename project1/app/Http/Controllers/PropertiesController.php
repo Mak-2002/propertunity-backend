@@ -37,7 +37,7 @@ class PropertiesController extends Controller
     }
 
     public function index(Request $request)
-    { 
+    {
         $filters = [
             'search' => $request->search,
             'category' => ucfirst($request->category),
@@ -63,9 +63,9 @@ class PropertiesController extends Controller
         return response($posts);
     }
 
-   
+
     public function store(Request $request)
-    { 
+    {
         $validated = $request->validate([
             'posttype' => 'required|in:sale,rent',
             'property_type' => 'required|in:House,Villa,Apartment,Commercial,Land,Office',
@@ -93,12 +93,12 @@ class PropertiesController extends Controller
             'security_gard' => 'boolean',
             'garden' => 'boolean',
         ]);
-       
 
-        if ($validated['property_type'] == 'Land') {
+        // Create category to set specific attributes related to the category of property
+        $category = null;
+        if ($validated['property_type'] == 'Land')
             $category = new Land;
-            $category->save();
-        } else {
+        else {
             switch ($validated['property_type']) {
                 case 'House':
                     $category = new House;
@@ -131,21 +131,18 @@ class PropertiesController extends Controller
                     break;
             }
 
-            //  $property->user_id = $validated['user_id'];
-            //  $property->name = $validated['name'];
-            //  $property->address = $validated['address'];
             $category->room_count = $validated['room_count'];
             $category->bathroom_count = $validated['bathroom_count'];
             $category->kitchen_count = $validated['kitchen_count'];
             $category->storey = $validated['storey'];
-            // $category->area = $validated['area'];
-            // $category->about = $validated['about'];
             $category->balkony = $validated['balkony'] ?? null;
             $category->parking = $validated['parking'] ?? null;
             $category->security_cameras = $validated['security_cameras'] ?? null;
             // $category->[Wi-Fi] = $validated['Wi-Fi'];
-            $category->save();
         }
+        $category?->save();
+
+        // Create the Property of previous category
         $property = new Property;
         $property->user_id = Auth::user()->id;
         $property->name = $validated['name'];
@@ -154,32 +151,29 @@ class PropertiesController extends Controller
         $property->address = $validated['address'];
         $property->about = $validated['about'];
         $property->area = $validated['area'];
-        // $property->setRelation('category', $category);
-        $property->category_type = $validated['property_type'];
+        $property->category_type = class_basename($category);
         $property->category_id = $category->id;
         $property->save();
 
+        // Create the post viewing the previous property
+        $post = null;
         if ($validated['posttype'] == 'sale') {
             $post = new SalePost;
-            $post->user_id = Auth::user()->id;
-            $post->property_id = $property->id;
             $post->price = $validated['price'];
-            $post->view_plan_id = $validated['view_plan_id'] ?? null;
-            $post->save();
         } else {
             $post = new RentPost;
-            $post->user_id = Auth::user()->id;
-            $post->property_id = $property->id;
             $post->monthly_rent = $validated['monthly_rent'];
             $post->max_duration = $validated['max_duration'];
-            $post->view_plan_id = $validated['view_plan_id'] ?? null;
-            $post->save();
-            $p=$post->with('property')->get();
         }
+        $post->user_id = Auth::user()->id;
+        $post->property_id = $property->id;
+        $post->view_plan_id = $validated['view_plan_id'] ?? null;
+        $post->save();
+
         return response([
             'status' => true,
-           'post' => $p,
-        //   'property' => $property
+            'message' => 'Post created successfully',
+            'post' => $post,
         ]);
     }
 
@@ -196,7 +190,7 @@ class PropertiesController extends Controller
 
     public function update(Request $request, $post)
     {
-        
+
         $validated = $request->validate([
             'posttype' => 'in:sale,rent',
             'property_type' => 'in:House,Villa,Apartment,Commercial,Land,Office',
@@ -222,14 +216,14 @@ class PropertiesController extends Controller
             'security_gard' => 'boolean',
             'garden' => 'boolean',
         ]);
-        
+
         // Retrieve the post by ID
-          if ($request->posttype == 'sale')
-        $post = SalePost::findOrFail($post);
-        
-         else if ($request->posttype == 'rent')
-        $post = RentPost::findOrFail($post);
-         
+        if ($request->posttype == 'sale')
+            $post = SalePost::findOrFail($post);
+
+        else if ($request->posttype == 'rent')
+            $post = RentPost::findOrFail($post);
+
         // Check if the request data includes any post attributes
         $postAttributes = array_intersect_key($request->all(), $post->getAttributes());
         $hasPostAttributes = !empty($postAttributes);
