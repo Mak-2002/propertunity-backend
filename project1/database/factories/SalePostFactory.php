@@ -46,7 +46,7 @@ class SalePostFactory extends Factory
             'view_plan_id'=>ViewPlan::factory(),
             'user_id'=>User::factory(),
             'price'=>$this->faker->randomNumber(),
-            'visibility'=>$this->faker->boolean,
+            // 'visibility'=>$this->faker->boolean,
             'property_id' => Property::factory(),
         ];
     }

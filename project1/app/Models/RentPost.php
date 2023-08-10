@@ -15,9 +15,9 @@ class RentPost extends Model
         // other sensitive attributes
     ];
 
-    // protected $with = [
-    //     'property'
-    // ];
+    protected $with = [
+        'property'
+    ];
 
     public function toArray() {
         $data = parent::toArray();

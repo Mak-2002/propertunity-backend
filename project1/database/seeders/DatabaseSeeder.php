@@ -13,9 +13,13 @@ use App\Models\Land;
 use App\Models\Property;
 use App\Models\Rating;
 use App\Models\RatingAspect;
+use App\Models\RentContract;
 use App\Models\RentPost;
+use App\Models\RentRequest;
 use App\Models\Review;
+use App\Models\SaleContract;
 use App\Models\SalePost;
+use App\Models\SaleRequest;
 use Illuminate\Database\Seeder;
 use \App\Models\User;
 use App\Models\ViewPlan;
@@ -49,16 +53,26 @@ class DatabaseSeeder extends Seeder
         ]);
         RentPost::factory(10)->create();
 
-        // ViewRequests Seeding
-        ViewRequest::factory(5)->create([
-            'sale_post_id' => 3,
-            'rent_post_id' => null
-        ]);
+        // // ViewRequests Seeding
+        // ViewRequest::factory(5)->create([
+        //     'sale_post_id' => 3,
+        //     'rent_post_id' => null
+        // ]);
 
-        ViewRequest::factory(5)->create([
-            'rent_post_id' => 2,
-            'sale_post_id' => null
-        ]);
+        // ViewRequest::factory(5)->create([
+        //     'rent_post_id' => 2,
+        //     'sale_post_id' => null
+        // ]);
+
+         // SaleRequests Seeding
+         SaleRequest::factory(10)->create();
+         // RentRequests Seeding
+        RentRequest::factory(10)->create();
+
+        //  // SaleContracts Seeding
+        // SaleContract::factory(10)->create();
+        //  // RentContracts Seeding
+        // RentContract::factory(10)->create();
 
         //Reviews and Ratings Seeding
         Rating::factory(10)->create();

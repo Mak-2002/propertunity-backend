@@ -44,7 +44,7 @@ class RentPostFactory extends Factory
             'view_plan_id'=>ViewPlan::factory(),
             'monthly_rent'=>$this->faker->randomNumber(),
             'max_duration'=>$this->faker->randomDigitNot(0),
-            'visibility'=>$this->faker->boolean,
+            // 'visibility'=>$this->faker->boolean,
             'property_id' => Property::factory(),
         ];
     }

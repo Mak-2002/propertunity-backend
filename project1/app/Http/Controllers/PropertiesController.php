@@ -10,7 +10,9 @@ use App\Models\Land;
 use App\Models\Office;
 use App\Models\Property;
 use App\Models\RentPost;
+use App\Models\RentRequest;
 use App\Models\SalePost;
+use App\Models\SaleRequest;
 use App\Models\Villa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -160,25 +162,25 @@ class PropertiesController extends Controller
         $property->save();
 
         if ($validated['posttype'] == 'sale') {
-            $post = new SalePost;
+            $post = new SaleRequest;
             $post->user_id = Auth::user()->id;
             $post->property_id = $property->id;
             $post->price = $validated['price'];
             $post->view_plan_id = $validated['view_plan_id'] ?? null;
             $post->save();
         } else {
-            $post = new RentPost;
+            $post = new RentRequest;
             $post->user_id = Auth::user()->id;
             $post->property_id = $property->id;
             $post->monthly_rent = $validated['monthly_rent'];
             $post->max_duration = $validated['max_duration'];
             $post->view_plan_id = $validated['view_plan_id'] ?? null;
             $post->save();
-            $p=$post->with('property')->get();
+            // $p=$post->with('property')->get();
         }
         return response([
             'status' => true,
-           'post' => $p,
+           'post' => $post,
         //   'property' => $property
         ]);
     }

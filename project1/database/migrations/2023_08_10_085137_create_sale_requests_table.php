@@ -11,17 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_posts', function (Blueprint $table) {
+        Schema::create('sale_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('view_plan_id')->nullable();
             $table->foreignId('property_id');
-            //$table->string('property_type');
-           // $table->unsignedBigInteger('property_id');
-          //  $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->double('price');
-            // $table->boolean('visibility')->default(false);
-           // $table->unsignedBigInteger('postable_id');
             $table->timestamps();
         });
     }
@@ -31,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sale_posts');
+        Schema::dropIfExists('sale_requests');
     }
 };
