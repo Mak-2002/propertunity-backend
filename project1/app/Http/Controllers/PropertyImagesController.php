@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Image;
 use App\Models\Property;
-use Illuminate\Http\Request;
+use Illuminate\Http\{Request, Response};
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PropertyImagesController extends Controller
 {
@@ -23,20 +25,45 @@ class PropertyImagesController extends Controller
      */
     public function store(Request $request, $property)
     {
-        $property = Property::findOrFail($property);
-        $uploaded_image = $request->file('image');
-        $ext = $uploaded_image->getClientOriginalExtension();
-        $image_object = $property->image_urls()->create(['url'=>'']);
-        $file_name = $image_object->id.'.'.$ext;
-        $file_name = $uploaded_image->storeAs('public/images', $file_name);
-        $url = asset('storage/images/'.basename($file_name));
-        $image_object->url = $url;
-        $image_object->save();
-        return response([
-            'status' => true,
-            'message' => 'image stored successfully',
-            'url' => $image_object->url,
+        $request->validate([
+            'image' => 'required|image',
         ]);
+
+        $property = Property::findOrFail($property);
+        $uploadedImage = $request->file('image');
+
+        // Start a database transaction
+        DB::beginTransaction();
+
+        try {
+            // Create the image object
+            $imageObject = $property->image_urls()->create(['url' => '']);
+
+            // Store the uploaded image
+            $storedPath = $uploadedImage->storeAs('public/property_images', $imageObject->id . '.' . $uploadedImage->getClientOriginalExtension());
+
+            // Generate the publicly accessible URL
+            $imageUrl = Storage::url($storedPath);
+            $imageObject->url = $imageUrl;
+            $imageObject->save();
+
+            // Commit the transaction
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Image stored successfully',
+                'url' => $imageUrl,
+            ]);
+        } catch (\Exception $e) {
+            // Rollback the transaction in case of an error
+            DB::rollback();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to store the image',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

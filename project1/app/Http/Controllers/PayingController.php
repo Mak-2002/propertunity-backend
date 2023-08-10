@@ -15,20 +15,20 @@ use Illuminate\Support\Facades\Auth;
 class PayingController extends Controller
 {
     public function pay( Request $request , $post )
-    {   
+    {
         if ($request->posttype == 'sale') {
             $post = SalePost::findOrFail($post);
-            $payment = new SaleContract;  
+            $payment = new SaleContract;
             $payment->payment_value = $post->price;
         } else if ($request->posttype == 'rent') {
             $post = RentPost::findOrFail($post);
-            $payment = new RentContract;  
+            $payment = new RentContract;
             $payment->payment_value = $post->monthly_rent*$request->months;
         }
         $payment->payee_id = $post->user_id;
         $payment->post_id = $post->id;
         $payment->payer_id = Auth::user()->id;
-        $payer = User::where('id', Auth::user()->id)->first();
+        $payer = Auth::user();
         $payee = User::where('id', $post->user_id)->first();
         if ($payer->balance < $payment->payment_value) {
             return response()->json([

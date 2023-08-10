@@ -38,8 +38,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('properties/{post}/favorite', [PropertiesController::class, 'change_favorite_state'])->where('post', '[0-9]+')->name('properties.favorite');
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/pay/{post}', [PayingController::class, 'pay']);
-    Route::get('/myprofile', [UserController::class, 'myProfile']);
-    Route::put('/editprofile', [UserController::class, 'editProfile']);
+    Route::prefix('/profile')->group(function() {
+        Route::get('/', [UserController::class, 'my_profile']);
+        Route::put('/edit', [UserController::class, 'edit_profile']);
+        Route::post('/uploadphoto', [UserController::class, 'upload_profile_photo']);
+    });
 
 });
 

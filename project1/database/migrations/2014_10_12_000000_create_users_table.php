@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->integer('balance')->nullable();
             $table->boolean('verified')->default(false);
+            $table->string('profile_photo_url')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
