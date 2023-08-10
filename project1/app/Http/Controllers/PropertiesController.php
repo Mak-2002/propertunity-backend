@@ -37,7 +37,7 @@ class PropertiesController extends Controller
     }
 
     public function index(Request $request)
-    {
+    { 
         $filters = [
             'search' => $request->search,
             'category' => ucfirst($request->category),
@@ -63,9 +63,9 @@ class PropertiesController extends Controller
         return response($posts);
     }
 
-    // todo: this method's not working @kareem-zd
+   
     public function store(Request $request)
-    {
+    { 
         $validated = $request->validate([
             'posttype' => 'required|in:sale,rent',
             'property_type' => 'required|in:House,Villa,Apartment,Commercial,Land,Office',
@@ -93,7 +93,7 @@ class PropertiesController extends Controller
             'security_gard' => 'boolean',
             'garden' => 'boolean',
         ]);
-
+       
 
         if ($validated['property_type'] == 'Land') {
             $category = new Land;
@@ -154,9 +154,9 @@ class PropertiesController extends Controller
         $property->address = $validated['address'];
         $property->about = $validated['about'];
         $property->area = $validated['area'];
-        $property->setRelation('category', $category);
-        // $property->category_type = $validated['property_type'];
-        // $property->category_id = $category->id;
+        // $property->setRelation('category', $category);
+        $property->category_type = $validated['property_type'];
+        $property->category_id = $category->id;
         $property->save();
 
         if ($validated['posttype'] == 'sale') {
@@ -174,10 +174,12 @@ class PropertiesController extends Controller
             $post->max_duration = $validated['max_duration'];
             $post->view_plan_id = $validated['view_plan_id'] ?? null;
             $post->save();
+            $p=$post->with('property')->get();
         }
         return response([
             'status' => true,
-            'post' => $post,
+           'post' => $p,
+        //   'property' => $property
         ]);
     }
 
@@ -194,8 +196,7 @@ class PropertiesController extends Controller
 
     public function update(Request $request, $post)
     {
-
-        // dd($request);
+        
         $validated = $request->validate([
             'posttype' => 'in:sale,rent',
             'property_type' => 'in:House,Villa,Apartment,Commercial,Land,Office',
@@ -221,10 +222,14 @@ class PropertiesController extends Controller
             'security_gard' => 'boolean',
             'garden' => 'boolean',
         ]);
-
+        
         // Retrieve the post by ID
+          if ($request->posttype == 'sale')
         $post = SalePost::findOrFail($post);
-
+        
+         else if ($request->posttype == 'rent')
+        $post = RentPost::findOrFail($post);
+         
         // Check if the request data includes any post attributes
         $postAttributes = array_intersect_key($request->all(), $post->getAttributes());
         $hasPostAttributes = !empty($postAttributes);

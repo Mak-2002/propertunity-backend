@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\{
     AuthController,
+    PayingController,
     PropertiesController,
-    PropertyImagesController
+    PropertyImagesController,
+    UserController
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +37,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('favorites', [PropertiesController::class, 'favorites'])->name('properties.favorites');
     Route::post('properties/{post}/favorite', [PropertiesController::class, 'change_favorite_state'])->where('post', '[0-9]+')->name('properties.favorite');
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/pay/{post}', [PayingController::class, 'pay']);
+    Route::get('/myprofile', [UserController::class, 'myProfile']);
+    Route::put('/editprofile', [UserController::class, 'editProfile']);
+
 });
 
 Route::post('/register', [AuthController::class, 'register'])->name('register');

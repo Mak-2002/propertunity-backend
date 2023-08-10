@@ -30,15 +30,15 @@ class AppServiceProvider extends ServiceProvider
              'Office'=>'App\Models\Office',
              'Villa'=>'App\Models\Villa',
               'User'=>'App\Models\User',
-             'RentPost'=>'App\Models\RentPost'::class,
-             'SalePost'=>'App\Models\SalePost'::class ,
-             'Favorite'=>'App\Models\Favorite'::class,
-             'Rating'=>'App\Models\Rating'::class ,
-             'RatingAspect'=>'App\Models\RatingAspect'::class,
-             'Review'=>'App\Models\Review'::class,
-             'VerificationCode'=>'App\Models\VerificationCode'::class,
-             'ViewPlan'=>'App\Models\ViewPlan'::class,
-             'ViewRequest'=>'App\Models\ViewRequest'::class
+             'RentPost'=>'App\Models\RentPost',
+             'SalePost'=>'App\Models\SalePost' ,
+             'Favorite'=>'App\Models\Favorite',
+             'Rating'=>'App\Models\Rating' ,
+             'RatingAspect'=>'App\Models\RatingAspect',
+             'Review'=>'App\Models\Review',
+             'VerificationCode'=>'App\Models\VerificationCode',
+             'ViewPlan'=>'App\Models\ViewPlan',
+             'ViewRequest'=>'App\Models\ViewRequest'
         ]);
     //    // Relation::morphMap([], 'User' , 'RentPost', 'SalePost' , 'Favorite','Rating' ,'RatingAspect','Review','VerificationCode','ViewPlan','ViewRequest');
      }

@@ -20,7 +20,7 @@ class AuthController extends Controller
         $validator = validator($request->only('name', 'phone', 'password'), [
             'name' => 'required|string',
             'phone' => ['required', 'unique:users', 'regex:/^[0-9+]+$/'],
-            'password' => 'min:6',
+            'password' => 'required|min:6',
         ]);
 
         // we will assume that frontend checked for all rules except for uniqueness
