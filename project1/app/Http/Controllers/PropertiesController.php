@@ -165,7 +165,7 @@ class PropertiesController extends Controller
             $post->property_id = $property->id;
             $post->price = $validated['price'];
             $post->save();
-            $p=SaleRequest::where('id',$post->id)->with('property')->get();
+            $p = SaleRequest::where('id', $post->id)->with('property')->get();
         } else {
             $post = new RentRequest;
             $post->user_id = Auth::user()->id;
@@ -174,11 +174,9 @@ class PropertiesController extends Controller
             $post->max_duration = $validated['max_duration'];
             $post->view_plan_id = $validated['view_plan_id'] ?? null;
             $post->save();
-            $p=RentRequest::where('id',$post->id)->with('property')->get();
-
-            
+            $p = RentRequest::where('id', $post->id)->with('property')->get();
         }
-       
+
 
         return response([
             'status' => true,
@@ -275,7 +273,6 @@ class PropertiesController extends Controller
     public function favorites(request $request)
     {
         if ($request->posttype == 'sale') {
-
             $favs = SalePost::whereHas(
                 'favorable_by',
                 fn ($query) =>
@@ -295,46 +292,45 @@ class PropertiesController extends Controller
     }
     public function change_favorite_state(Request $request, $post)
     {
-        if ($request->posttype == 'sale') {
-            $favorite = Favorite::where('user_id',Auth::user()->id)->where('sale_post_id', $post);
-            if ($favorite->exists()) {
-                $favorite->delete();
-                return response()->json([
-                    'success' => true,
-                    'message' => 'deleted from favorites successfully',
-                ]);
-            }
-            $favorite = new Favorite;
-            $favorite->setRelation('user', Auth::user()->id);
-            $favorite->user_id = Auth::user()->id;
-            $favorite->setRelation('salePost', $post);
-            $favorite->sale_post_id = $post;
-            $favorite->save();
+        $favorite = null;
+        $is_sale_post = ($request->posttype == 'sale');
+
+        $user = Auth::user();
+
+        if ($is_sale_post)
+            $favorite = Favorite::where('user_id', $user->id)->where('sale_post_id', $post);
+        else
+            $favorite = Favorite::where('user_id', $user->id)->where('rent_post_id', $post);
+
+        if ($favorite->exists()) {
+            $favorite->delete();
             return response()->json([
                 'success' => true,
-                'message' => 'added to favorites successfully',
-            ]);
-        } elseif ($request->posttype == 'rent') {
-            $favorite = Favorite::where('user_id', Auth::user()->id)->where('rent_post_id', $post);
-            if ($favorite->exists()) {
-                $favorite->delete();
-                return response()->json([
-                    'success' => true,
-                    'message' => 'deleted from favorites successfully',
-                ]);
-            }
-            $favorite = new Favorite;
-            $favorite->setRelation('user',Auth::user()->id);
-            $favorite->user_id = Auth::user()->id;
-            $favorite->setRelation('rentPost', $post);
-            $favorite->rent_post_id = $post;
-            $favorite->save();
-            return response()->json([
-                'success' => true,
-                'message' => 'added to favorites successfully',
+                'message' => 'Deleted from favorites successfully',
             ]);
         }
+
+
+        $favorite = new Favorite;
+        $favorite->setRelation('user', $user);
+        $favorite->user_id = $favorite->user->id;
+
+        if ($is_sale_post) {
+            $favorite->setRelation('sale_post', SalePost::findOrFail($post));
+            $favorite->sale_post_id = $favorite->sale_post->id;
+        } else {
+            $favorite->setRelation('rent_post', RentPost::findOrFail($post));
+            $favorite->rent_post_id = $favorite->rent_post->id;
+        }
+
+        $favorite->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Added to favorites successfully',
+        ]);
     }
+
     public function test(Request $request)
     {
         $property = House::where('id', $request->id)->with('rent')->get();

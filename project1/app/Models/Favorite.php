@@ -14,12 +14,12 @@ class Favorite extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function salePost()
+    public function sale_post()
     {
         return $this->belongsTo(SalePost::class);
     }
 
-    public function rentPost()
+    public function rent_post()
     {
         return $this->belongsTo(RentPost::class);
     }
