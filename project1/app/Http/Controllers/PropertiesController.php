@@ -296,7 +296,7 @@ class PropertiesController extends Controller
     public function change_favorite_state(Request $request, $post)
     {
         if ($request->posttype == 'sale') {
-            $favorite = Favorite::where('user_id', $request->user_id)->where('sale_post_id', $post);
+            $favorite = Favorite::where('user_id',Auth::user()->id)->where('sale_post_id', $post);
             if ($favorite->exists()) {
                 $favorite->delete();
                 return response()->json([
@@ -305,8 +305,8 @@ class PropertiesController extends Controller
                 ]);
             }
             $favorite = new Favorite;
-            $favorite->setRelation('user', $request->user_id);
-            $favorite->user_id = $request->user_id;
+            $favorite->setRelation('user', Auth::user()->id);
+            $favorite->user_id = Auth::user()->id;
             $favorite->setRelation('salePost', $post);
             $favorite->sale_post_id = $post;
             $favorite->save();
@@ -315,7 +315,7 @@ class PropertiesController extends Controller
                 'message' => 'added to favorites successfully',
             ]);
         } elseif ($request->posttype == 'rent') {
-            $favorite = Favorite::where('user_id', $request->user_id)->where('rent_post_id', $post);
+            $favorite = Favorite::where('user_id', Auth::user()->id)->where('rent_post_id', $post);
             if ($favorite->exists()) {
                 $favorite->delete();
                 return response()->json([
@@ -324,8 +324,8 @@ class PropertiesController extends Controller
                 ]);
             }
             $favorite = new Favorite;
-            $favorite->setRelation('user', $request->user_id);
-            $favorite->user_id = $request->user_id;
+            $favorite->setRelation('user',Auth::user()->id);
+            $favorite->user_id = Auth::user()->id;
             $favorite->setRelation('rentPost', $post);
             $favorite->rent_post_id = $post;
             $favorite->save();
