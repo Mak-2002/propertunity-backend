@@ -15,8 +15,4 @@ class Villa extends Model
     public function property(){
         return $this->morphOne(Property::class, 'category');
     }
-
-    
-
-
 }

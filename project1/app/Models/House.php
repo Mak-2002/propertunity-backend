@@ -11,20 +11,9 @@ class House extends Model
     protected $guarded = [
 
     ];
-    
+
     public function property(){
         return $this->morphOne(Property::class, 'category');
     }
 
-    public function rent()
-    {   
-        //return $this->morphTo();
-       
-        return $this->morphMany(RentPost::class,'property');
-    }
-
-    public function sale()
-    {
-        return $this->morphMany(salePost::class,'property');
-    }
 }
