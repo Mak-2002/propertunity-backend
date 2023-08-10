@@ -164,6 +164,8 @@ class PropertiesController extends Controller
             $post->user_id = Auth::user()->id;
             $post->property_id = $property->id;
             $post->price = $validated['price'];
+            $post->save();
+            $p=SaleRequest::where('id',$post->id)->with('property')->get();
         } else {
             $post = new RentRequest;
             $post->user_id = Auth::user()->id;
@@ -172,17 +174,16 @@ class PropertiesController extends Controller
             $post->max_duration = $validated['max_duration'];
             $post->view_plan_id = $validated['view_plan_id'] ?? null;
             $post->save();
-            // $p=$post->with('property')->get();
+            $p=RentRequest::where('id',$post->id)->with('property')->get();
+
+            
         }
-        $post->user_id = Auth::user()->id;
-        $post->property_id = $property->id;
-        $post->view_plan_id = $validated['view_plan_id'] ?? null;
-        $post->save();
+       
 
         return response([
             'status' => true,
             'message' => 'Post created successfully',
-            'post' => $post,
+            'post' => $p,
         ]);
     }
 
