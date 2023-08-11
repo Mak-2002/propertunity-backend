@@ -160,21 +160,21 @@ class PropertiesController extends Controller
         // Create the post viewing the previous property
         $post = null;
         if ($validated['posttype'] == 'sale') {
-            $post = new SaleRequest;
+            $post = new SalePost;
             $post->user_id = Auth::user()->id;
             $post->property_id = $property->id;
             $post->price = $validated['price'];
             $post->save();
-            $p = SaleRequest::where('id', $post->id)->with('property')->get();
+            $p = SalePost::where('id', $post->id)->with('property')->get();
         } else {
-            $post = new RentRequest;
+            $post = new RentPost;
             $post->user_id = Auth::user()->id;
             $post->property_id = $property->id;
             $post->monthly_rent = $validated['monthly_rent'];
             $post->max_duration = $validated['max_duration'];
             $post->view_plan_id = $validated['view_plan_id'] ?? null;
             $post->save();
-            $p = RentRequest::where('id', $post->id)->with('property')->get();
+            $p = RentPost::where('id', $post->id)->with('property')->get();
         }
 
 

@@ -59,15 +59,15 @@ class DatabaseSeeder extends Seeder
         //     'rent_post_id' => null
         // ]);
 
-        // ViewRequest::factory(5)->create([
-        //     'rent_post_id' => 2,
-        //     'sale_post_id' => null
-        // ]);
+        ViewRequest::factory(5)->create([
+            'rent_post_id' => 2,
+            'sale_post_id' => null
+        ]);
 
-         // SaleRequests Seeding
-         SaleRequest::factory(10)->create();
-         // RentRequests Seeding
-        RentRequest::factory(10)->create();
+        //  // SaleRequests Seeding
+        //  SaleRequest::factory(10)->create();
+        //  // RentRequests Seeding
+        // RentRequest::factory(10)->create();
 
         //  // SaleContracts Seeding
         // SaleContract::factory(10)->create();
