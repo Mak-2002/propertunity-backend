@@ -272,26 +272,26 @@ class PropertiesController extends Controller
 
     public function favorites(request $request)
     {
-        if ($request->posttype == 'sale') {
-            $favs = SalePost::whereHas(
+            $salefavs = SalePost::whereHas(
                 'favorable_by',
                 fn ($query) =>
                 $query->where('user_id', Auth::user()->id)
             )->with('property')->get();
-        }
+        
 
-        if ($request->posttype == 'rent') {
-            $favs = RentPost::whereHas(
+            $rentfavs = RentPost::whereHas(
                 'favorable_by',
                 fn ($query) =>
                 $query->where('user_id', Auth::user()->id)
             )->with('property')->get();
-        }
 
+            $favs = $rentfavs->concat($salefavs);    
+        
+            // $favs = $salefavs->concat($rentfavs);    
         return response()->json($favs);
     }
     public function change_favorite_state(Request $request, $post)
-    {
+    { 
         $favorite = null;
         $is_sale_post = ($request->posttype == 'sale');
 
