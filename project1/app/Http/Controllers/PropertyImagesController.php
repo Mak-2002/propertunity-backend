@@ -37,7 +37,11 @@ class PropertyImagesController extends Controller
 
         try {
             // Create the image object
-            $imageObject = $property->image_urls()->create(['url' => '']);
+            $imageObject = new Image;
+            $imageObject->setRelation('property', $property);
+            $imageObject->property_id = $property->id;
+            $imageObject->url = '';
+            $imageObject->save();
 
             // Store the uploaded image
             $storedPath = $uploadedImage->storeAs('public/property_images', $imageObject->id . '.' . $uploadedImage->getClientOriginalExtension());
@@ -46,6 +50,8 @@ class PropertyImagesController extends Controller
             $imageUrl = Storage::url($storedPath);
             $imageObject->url = $imageUrl;
             $imageObject->save();
+
+            // dd($property);
 
             // Commit the transaction
             DB::commit();
@@ -61,7 +67,7 @@ class PropertyImagesController extends Controller
 
             return response()->json([
                 'status' => false,
-                'message' => 'Failed to store the image',
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
