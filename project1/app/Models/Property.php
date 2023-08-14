@@ -10,22 +10,33 @@ class Property extends Model
 {
     use HasFactory;
 
-    // protected $with = ['category'];
+    protected $with = ['image_urls'];
     // protected $without = ['category'];
 
-    public function toArray() {
+    public function toArray()
+    {
         $data = parent::toArray(); // default Property attributes
-        // $data['category'] = class_basename($data['category_type']);
-        // unset($data['category_type']); // Renaming 'category_type' to 'category'
-        $added = $this->category->toArray(); // attributes from category child relation
+
+        $urls = array_map(function ($item) {
+            return $item['url'];
+        }, $data['image_urls']);
+        $data['image_urls'] = $urls;
+
+        $added =  $this->category->toArray(); // attributes from category child relation
+        unset($added['id']);
+        unset($added['created_at']);
+        unset($added['updated_at']);
+
         return array_merge($data, $added);
     }
 
-    public function image_urls() {
+    public function image_urls()
+    {
         return $this->hasMany(Image::class);
     }
 
-    public function category() {
+    public function category()
+    {
         return $this->morphTo();
     }
 }
