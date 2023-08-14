@@ -45,6 +45,8 @@ class RentPostFactory extends Factory
             'monthly_rent'=>$this->faker->randomNumber(),
             'max_duration'=>$this->faker->randomDigitNot(0),
             'visibility'=>$this->faker->boolean,
+            'approval'=>$this->faker->boolean,
+            'rejection_purpose' => $this->faker->text(),
             'property_id' => Property::factory(),
         ];
     }

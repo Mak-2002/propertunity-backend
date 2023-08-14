@@ -1,13 +1,27 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RentPost extends Model
 {
     use HasFactory;
+
+    protected static function boot()
+    {
+        parent::boot();
+    
+        static::addGlobalScope('visibility', function (Builder $builder) {
+            $builder->where('visibility', true);
+        });
+    
+        static::addGlobalScope('approval', function (Builder $builder) {
+            $builder->where('approval', true);
+        });
+    }
+    protected $fillable = ['approval'];
     protected $guarded = [
         'id',
         'user_id',

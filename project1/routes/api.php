@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\{
+    AdminController,
     AuthController,
     PayingController,
     PropertiesController,
@@ -43,11 +44,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/edit', [UserController::class, 'edit_profile']);
         Route::post('/uploadphoto', [UserController::class, 'upload_profile_photo']);
     });
+    Route::get('getpendingposts', [AdminController::class, 'getPendingPosts'])->name('getPendingPosts');
+    Route::put('approverequest/{viewRequest}', [AdminController::class, 'approveRequest'])->name('approveRequest');
+    Route::put('rejectrequest/{viewRequest}', [AdminController::class, 'rejectRequest'])->name('rejectRequest');
+
+
 
 });
 
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/adminlogin', [AuthController::class, 'adminLogin'])->name('adminLogin');
 Route::post('verification', [AuthController::class, 'verification'])->name('verification');
 
 

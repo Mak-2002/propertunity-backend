@@ -13,7 +13,34 @@ use function PHPUnit\Framework\returnSelf;
 // use Twilio\Rest\Client;
 
 class AuthController extends Controller
-{
+{   
+    public function adminLogin(Request $request)
+    {
+        // Qusai: used Laravel's validator to access Validator::fails() method
+        $validator = validator($request->only('phone', 'password'), [
+            'phone' => ['required', 'regex:/^[0-9+]+$/'],
+            'password' => 'min:6',
+        ]);
+
+        if ($validator->fails())
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid credentials'
+            ], 401);
+
+        if ($request->phone !== "123456789" ||!auth()->attempt(request()->only('phone', 'password')))
+            return response()->json([
+                'status' => false,
+                'message' => 'User with phone not found Or Wrong password'
+            ], 401);
+
+        return response([
+            'status' => true,
+            'message' => 'Logged in successfully',
+            'access_token' => Auth::user()->createToken('auth-token')->plainTextToken,
+        ]);
+    }
+
     public function register(Request $request)
     {
 

@@ -16,8 +16,12 @@ class SalePost extends Model
         static::addGlobalScope('visibility', function (Builder $builder) {
             $builder->where('visibility', true);
         });
+    
+        static::addGlobalScope('approval', function (Builder $builder) {
+            $builder->where('approval', true);
+        });
     }
-
+    protected $fillable = ['approval'];
     use HasFactory;
     protected $guarded = [
         'id',

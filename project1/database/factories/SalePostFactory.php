@@ -47,6 +47,8 @@ class SalePostFactory extends Factory
             'user_id'=>User::factory(),
             'price'=>$this->faker->randomNumber(),
             'visibility'=>$this->faker->boolean,
+            'approval'=>$this->faker->boolean,
+            'rejection_purpose' => $this->faker->text(),
             'property_id' => Property::factory(),
         ];
     }

@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
         SalePost::factory(2)->create([
             'user_id' => 2,
             'property_id' => 1,
+            'approval' => null
         ]);
         SalePost::factory(10)->create();
 
@@ -50,19 +51,21 @@ class DatabaseSeeder extends Seeder
         RentPost::factory(2)->create([
             'user_id' => 2,
             'property_id' => 1,
+            'approval' => null
+
         ]);
         RentPost::factory(10)->create();
 
-        // // ViewRequests Seeding
+        // ViewRequests Seeding
         // ViewRequest::factory(5)->create([
         //     'sale_post_id' => 3,
         //     'rent_post_id' => null
         // ]);
 
-        ViewRequest::factory(5)->create([
-            'rent_post_id' => 2,
-            'sale_post_id' => null
-        ]);
+        // ViewRequest::factory(5)->create([
+        //     'rent_post_id' => 2,
+        //     'sale_post_id' => null
+        // ]);
 
         //  // SaleRequests Seeding
         //  SaleRequest::factory(10)->create();

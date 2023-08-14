@@ -65,7 +65,7 @@ class PropertiesController extends Controller
         return response($posts);
     }
 
-
+ //TODO: not returning the property with the post
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -165,7 +165,7 @@ class PropertiesController extends Controller
             $post->property_id = $property->id;
             $post->price = $validated['price'];
             $post->save();
-            $p = SalePost::where('id', $post->id)->with('property')->get();
+
         } else {
             $post = new RentPost;
             $post->user_id = Auth::user()->id;
@@ -174,14 +174,14 @@ class PropertiesController extends Controller
             $post->max_duration = $validated['max_duration'];
             $post->view_plan_id = $validated['view_plan_id'] ?? null;
             $post->save();
-            $p = RentPost::where('id', $post->id)->with('property')->get();
-        }
 
+
+        }
 
         return response([
             'status' => true,
             'message' => 'Post created successfully',
-            'post' => $p,
+            'post' => $post,
         ]);
     }
 

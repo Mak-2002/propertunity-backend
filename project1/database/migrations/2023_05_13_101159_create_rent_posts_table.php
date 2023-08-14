@@ -21,7 +21,9 @@ return new class extends Migration
           //  $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->double('monthly_rent');
             $table->integer('max_duration')->nullable();
-            $table->boolean('visibility')->default(false);
+            $table->boolean('visibility')->default(true);
+            $table->boolean('approval')->nullable()->default(null);
+            $table->text('rejection_purpose')->nullable();
          //   $table->unsignedBigInteger('postable_id');
             $table->timestamps();
         });
