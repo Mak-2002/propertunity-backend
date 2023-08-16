@@ -57,7 +57,7 @@ class PropertyImagesController extends Controller
             DB::commit();
 
             return response()->json([
-                'status' => true,
+                'success' => true,
                 'message' => 'Image stored successfully',
                 'url' => $imageUrl,
             ]);
@@ -66,7 +66,7 @@ class PropertyImagesController extends Controller
             DB::rollback();
 
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

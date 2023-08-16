@@ -25,7 +25,7 @@ class RegistrationTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJson([
-            "status" => true,
+            "success" => true,
             "message" => "Waiting for OTP Verification"
         ]);
     }

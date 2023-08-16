@@ -28,10 +28,10 @@ class PropertiesController extends Controller
     {
         $user_id = Auth::user()->id;
         $data = [
-            'sale_posts' => SalePost::whereHas('user', function ($query) use ($user_id) {
+            'sale_posts' => SalePost::withoutGlobalScopes()->whereHas('user', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
             })->get(),
-            'rent_posts' => RentPost::whereHas('user', function ($query) use ($user_id) {
+            'rent_posts' => RentPost::withoutGlobalScopes()->whereHas('user', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
             })->get(),
         ];
@@ -166,8 +166,6 @@ class PropertiesController extends Controller
             $post->save();
             $post->refresh();
             $post->load('property');
-
-
         } else {
             $post = new RentPost;
             $post->user_id = Auth::user()->id;
@@ -178,12 +176,11 @@ class PropertiesController extends Controller
             $post->save();
             $post->refresh();
             $post->load('property');
-
         }
 
 
         return response([
-            'status' => true,
+            'success' => true,
             'message' => 'Post created successfully',
             'post' => $post,
         ]);
@@ -191,12 +188,18 @@ class PropertiesController extends Controller
 
     public function show(Request $request, $post)
     {
-        if ($request->posttype == 'sale')
-            $post = SalePost::findOrFail($post);
+        try {
+            if ($request->posttype == 'sale')
+                $post = SalePost::findOrFail($post);
 
-        else if ($request->posttype == 'rent')
-            $post = RentPost::findOrFail($post);
-
+            else if ($request->posttype == 'rent')
+                $post = RentPost::findOrFail($post);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ]);
+        }
         return response($post);
     }
 
@@ -254,85 +257,99 @@ class PropertiesController extends Controller
 
         // Return a response with the updated post and property data
         return response([
-            'status' => true,
+            'success' => true,
             'post' => $post,
         ]);
     }
 
     public function destroy(Request $request, $post)
     {
-        if ($request->posttype == 'sale')
-            $property = SalePost::findOrFail($post)->with('property');
+        try {
+            if ($request->posttype == 'sale')
+                $property = SalePost::findOrFail($post)->with('property');
 
-        if ($request->posttype == 'rent')
-            $property = RentPost::findOrFail($post)->with('property');
+            if ($request->posttype == 'rent')
+                $property = RentPost::findOrFail($post)->with('property');
 
-        $property->delete();
-        return response([
-            'status' => true,
-            'message' => 'Post deleted successfully',
-        ]);
+            $property->delete();
+            return response([
+                'success' => true,
+                'message' => 'Post deleted successfully',
+            ]);
+        } catch (\Throwable $th) {
+            return response([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ]);
+        }
     }
 
     public function favorites(request $request)
     {
-            $salefavs = SalePost::whereHas(
-                'favorable_by',
-                fn ($query) =>
-                $query->where('user_id', Auth::user()->id)
-            )->with('property')->get();
-        
+        $salefavs = SalePost::whereHas(
+            'favorable_by',
+            fn ($query) =>
+            $query->where('user_id', Auth::user()->id)
+        )->with('property')->get();
 
-            $rentfavs = RentPost::whereHas(
-                'favorable_by',
-                fn ($query) =>
-                $query->where('user_id', Auth::user()->id)
-            )->with('property')->get();
 
-            $favs = $rentfavs->concat($salefavs);    
-        
-            // $favs = $salefavs->concat($rentfavs);    
+        $rentfavs = RentPost::whereHas(
+            'favorable_by',
+            fn ($query) =>
+            $query->where('user_id', Auth::user()->id)
+        )->with('property')->get();
+
+        $favs = $rentfavs->concat($salefavs);
+
+        // $favs = $salefavs->concat($rentfavs);
         return response()->json($favs);
     }
     public function change_favorite_state(Request $request, $post)
-    { 
-        $favorite = null;
-        $is_sale_post = ($request->posttype == 'sale');
+    {
+        try {
+            $favorite = null;
+            $is_sale_post = ($request->posttype == 'sale');
 
-        $user = Auth::user();
+            $user = Auth::user();
 
-        if ($is_sale_post)
-            $favorite = Favorite::where('user_id', $user->id)->where('sale_post_id', $post);
-        else
-            $favorite = Favorite::where('user_id', $user->id)->where('rent_post_id', $post);
+            if ($is_sale_post)
+                $favorite = Favorite::where('user_id', $user->id)->where('sale_post_id', $post);
+            else
+                $favorite = Favorite::where('user_id', $user->id)->where('rent_post_id', $post);
 
-        if ($favorite->exists()) {
-            $favorite->delete();
+            if ($favorite->exists()) {
+                $favorite->delete();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Deleted from favorites successfully',
+                ]);
+            }
+
+
+            $favorite = new Favorite;
+            $favorite->setRelation('user', $user);
+            $favorite->user_id = $favorite->user->id;
+
+            if ($is_sale_post) {
+                $favorite->setRelation('sale_post', SalePost::findOrFail($post));
+                $favorite->sale_post_id = $favorite->sale_post->id;
+            } else {
+                $favorite->setRelation('rent_post', RentPost::findOrFail($post));
+                $favorite->rent_post_id = $favorite->rent_post->id;
+            }
+
+            $favorite->save();
+
             return response()->json([
                 'success' => true,
-                'message' => 'Deleted from favorites successfully',
+                'message' => 'Added to favorites successfully',
+            ]);
+        } catch (\Throwable $th) {
+            return response([
+                'success' => false,
+                'message' => $th->getMessage(),
             ]);
         }
-
-
-        $favorite = new Favorite;
-        $favorite->setRelation('user', $user);
-        $favorite->user_id = $favorite->user->id;
-
-        if ($is_sale_post) {
-            $favorite->setRelation('sale_post', SalePost::findOrFail($post));
-            $favorite->sale_post_id = $favorite->sale_post->id;
-        } else {
-            $favorite->setRelation('rent_post', RentPost::findOrFail($post));
-            $favorite->rent_post_id = $favorite->rent_post->id;
-        }
-
-        $favorite->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Added to favorites successfully',
-        ]);
     }
 
     public function test(Request $request)
@@ -373,7 +390,7 @@ class PropertiesController extends Controller
     //         $post->update($request->all());
     //     }
     //     return response([
-    //         'status' => true,
+    //         'success' => true,
     //         'post' => $post,
     //     ]);
 
@@ -393,7 +410,7 @@ class PropertiesController extends Controller
 
     // // Return a response with the updated post and property data
     // return response([
-    //     'status' => true,
+    //     'success' => true,
     //     'post' => $post,
     //     'property' => $property,
     // ]);

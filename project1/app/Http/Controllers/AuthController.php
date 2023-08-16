@@ -13,7 +13,7 @@ use function PHPUnit\Framework\returnSelf;
 // use Twilio\Rest\Client;
 
 class AuthController extends Controller
-{   
+{
     public function adminLogin(Request $request)
     {
         // Qusai: used Laravel's validator to access Validator::fails() method
@@ -24,18 +24,18 @@ class AuthController extends Controller
 
         if ($validator->fails())
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => 'Invalid credentials'
             ], 401);
 
         if ($request->phone !== "123456789" ||!auth()->attempt(request()->only('phone', 'password')))
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => 'User with phone not found Or Wrong password'
             ], 401);
 
         return response([
-            'status' => true,
+            'success' => true,
             'message' => 'Logged in successfully',
             'access_token' => Auth::user()->createToken('auth-token')->plainTextToken,
         ]);
@@ -53,7 +53,7 @@ class AuthController extends Controller
         // we will assume that frontend checked for all rules except for uniqueness
         if ($validator->fails())
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => 'A user with the entered phone number already exists',
             ], 401);
 
@@ -62,7 +62,7 @@ class AuthController extends Controller
 
         $sms = $this->sendSMS($request->phone); //DEBUG
         return response([
-            'status' => true,
+            'success' => true,
             'message' => 'Waiting for OTP verification',
             // 'access_token' => $authToken,
         ]);
@@ -75,7 +75,7 @@ class AuthController extends Controller
         $user->tokens()->delete();
         Auth::logout();
         return response()->json([
-            'status' => true,
+            'success' => true,
             'message' => 'Logged out successfully',
         ]);
     }
@@ -91,18 +91,18 @@ class AuthController extends Controller
 
         if ($validator->fails())
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => 'Invalid credentials'
             ], 401);
 
         if (!auth()->attempt(request()->only('phone', 'password')))
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => 'User with phone not found Or Wrong password'
             ], 401);
 
         return response([
-            'status' => true,
+            'success' => true,
             'message' => 'Logged in successfully',
             'access_token' => Auth::user()->createToken('auth-token')->plainTextToken,
         ]);
@@ -146,12 +146,12 @@ class AuthController extends Controller
 
         // if ($message->getStatus() == 0) {
         //     return ([
-        //         'status' => true,
+        //         'success' => true,
         //         'otp' => $otp,
         //     ]);
         // } else {
         //     //TODO: should it return a response ?
-        //     echo "The message failed with status: " . $message->getStatus() . "\n";
+        //     echo "The message failed with success: " . $message->getStatus() . "\n";
         // }
     }
 
@@ -176,7 +176,7 @@ class AuthController extends Controller
 
         $now = now();
         $data = [
-            'status' => false
+            'success' => false
         ];
         if (!$verificationCode) {
             // return redirect()->back()->with('error', 'Your OTP is not correct');
@@ -196,7 +196,7 @@ class AuthController extends Controller
             $authToken = $user->createToken('auth-token')->plainTextToken;
             Auth::attempt([$request->phone, $request->password]);
             return response()->json([
-                'status' => true,
+                'success' => true,
                 'message' => 'User verefied and logged in successfully',
                 'access_token' => $authToken,
             ]);
@@ -211,7 +211,7 @@ class AuthController extends Controller
             Auth::attempt($request->only('phone', 'password'));
 
             return response()->json([
-                'status' => true,
+                'success' => true,
                 'message' => 'User created and verefied and logged in successfully',
                 'access_token' => $authToken,
             ], 201);

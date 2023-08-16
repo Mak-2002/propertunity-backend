@@ -38,7 +38,7 @@ class UserController extends Controller
             DB::commit();
 
             return response()->json([
-                'status' => true,
+                'success' => true,
                 'message' => 'Profile photo updated successfully',
                 'url' => $imageUrl,
             ]);
@@ -47,7 +47,7 @@ class UserController extends Controller
             DB::rollback();
 
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => 'Failed to store the image',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -56,7 +56,7 @@ class UserController extends Controller
     public function my_profile()
     {
         return response()->json([
-            'status' => true,
+            'success' => true,
             'user' => Auth::user(),
         ]);
     }
@@ -83,7 +83,7 @@ class UserController extends Controller
         }
 
         return response([
-            'status' => true,
+            'success' => true,
             'user' => $user,
         ]);
     }

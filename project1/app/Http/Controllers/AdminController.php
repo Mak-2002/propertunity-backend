@@ -13,12 +13,12 @@ class AdminController extends Controller
     {
         $rentPosts = RentPost::withoutGlobalScopes()->whereNull('approval')->get();
         $salePosts = SalePost::withoutGlobalScopes()->whereNull('approval')->get();
-    
+
         $posts = [
             'rent_posts' => $rentPosts,
             'sale_posts' => $salePosts,
         ];
-    
+
         return $posts;
     }
 //     public function checkRequests()
@@ -30,7 +30,7 @@ class AdminController extends Controller
 //     }])->get();
 
 //     return response()->json([
-//         'status' => true,
+//         'success' => true,
 //         'requests' => $requests
 //     ]);
 // }
@@ -49,13 +49,13 @@ public function approveRequest(Request $request, $post)
         $post->save();
 
         return response()->json([
-            'status' => true,
+            'success' => true,
             'requested_post' => $post
         ]);
     }
 
     return response()->json([
-        'status' => false,
+        'success' => false,
         'message' => 'Post not found'
     ]);
 }
@@ -74,23 +74,23 @@ public function rejectRequest(Request $request,$post)
         $post->save();
 
         return response()->json([
-            'status' => true,
+            'success' => true,
             'requested_post' => $post
         ]);
     }
 
     return response()->json([
-        'status' => false,
+        'success' => false,
         'message' => 'Post not found'
     ]);
 
-    
+
 }
 //     public function approveRequest(Request $request, $viewRequest)
-// {     
+// {
 //     $viewRequest = ViewRequest::find($viewRequest);
 //     // $post = SalePost::where('id' , $viewRequest->sale_post_id);
-    
+
 //     // // Assuming $post is an instance of RentPost or SalePost
 //     // $post->visibility = true; // Update the visibility of the post
 //     // $post->save(); // Save the changes
