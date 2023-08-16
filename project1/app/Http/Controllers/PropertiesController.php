@@ -195,71 +195,77 @@ class PropertiesController extends Controller
             else if ($request->posttype == 'rent')
                 $post = RentPost::findOrFail($post);
         } catch (\Throwable $th) {
-            return response()->json([
+            return response([
                 'success' => false,
                 'message' => $th->getMessage(),
-            ]);
+            ], 500);
         }
         return response($post);
     }
 
     public function update(Request $request, $post)
     {
+        try {
+            $validated = $request->validate([
+                'posttype' => 'in:sale,rent',
+                'property_type' => 'in:House,Villa,Apartment,Commercial,Land,Office',
+                'price' => 'numeric',
+                'monthly_rent' => 'numeric',
+                'max_duration' => 'integer',
+                'view_plan_id' => 'integer|exists:view_plans,id',
+                'name' => 'string',
+                'address' => 'string',
+                'room_count' => 'integer',
+                'bathroom_count' => 'integer',
+                'kitchen_count' => 'integer',
+                'storey' => 'integer',
+                'area' => 'numeric',
+                'about' => 'string|max:500',
+                'balkony' => 'integer',
+                'gym' => 'boolean',
+                'pool' => 'boolean',
+                'parking' => 'boolean',
+                'security_cameras' => 'boolean',
+                'elevator' => 'boolean',
+                'Wi-Fi' => 'boolean',
+                'security_gard' => 'boolean',
+                'garden' => 'boolean',
+            ]);
 
-        $validated = $request->validate([
-            'posttype' => 'in:sale,rent',
-            'property_type' => 'in:House,Villa,Apartment,Commercial,Land,Office',
-            'price' => 'numeric',
-            'monthly_rent' => 'numeric',
-            'max_duration' => 'integer',
-            'view_plan_id' => 'integer|exists:view_plans,id',
-            'name' => 'string',
-            'address' => 'string',
-            'room_count' => 'integer',
-            'bathroom_count' => 'integer',
-            'kitchen_count' => 'integer',
-            'storey' => 'integer',
-            'area' => 'numeric',
-            'about' => 'string|max:500',
-            'balkony' => 'integer',
-            'gym' => 'boolean',
-            'pool' => 'boolean',
-            'parking' => 'boolean',
-            'security_cameras' => 'boolean',
-            'elevator' => 'boolean',
-            'Wi-Fi' => 'boolean',
-            'security_gard' => 'boolean',
-            'garden' => 'boolean',
-        ]);
+            // Retrieve the post by ID
+            if ($request->posttype == 'sale')
+                $post = SalePost::findOrFail($post);
 
-        // Retrieve the post by ID
-        if ($request->posttype == 'sale')
-            $post = SalePost::findOrFail($post);
+            else if ($request->posttype == 'rent')
+                $post = RentPost::findOrFail($post);
 
-        else if ($request->posttype == 'rent')
-            $post = RentPost::findOrFail($post);
+            // Check if the request data includes any post attributes
+            $postAttributes = array_intersect_key($request->all(), $post->getAttributes());
+            $hasPostAttributes = !empty($postAttributes);
 
-        // Check if the request data includes any post attributes
-        $postAttributes = array_intersect_key($request->all(), $post->getAttributes());
-        $hasPostAttributes = !empty($postAttributes);
+            // Check if the request data includes any property attributes
+            $propertyAttributes = array_intersect_key($request->all(), $post->property->getAttributes());
+            $hasPropertyAttributes = !empty($propertyAttributes);
 
-        // Check if the request data includes any property attributes
-        $propertyAttributes = array_intersect_key($request->all(), $post->property->getAttributes());
-        $hasPropertyAttributes = !empty($propertyAttributes);
+            // Update the post and property attributes if there are any post or property attributes in the request data
+            if ($hasPostAttributes) {
+                $post->update($postAttributes);
+            }
+            if ($hasPropertyAttributes) {
+                $post->property->update($propertyAttributes);
+            }
 
-        // Update the post and property attributes if there are any post or property attributes in the request data
-        if ($hasPostAttributes) {
-            $post->update($postAttributes);
+            // Return a response with the updated post and property data
+            return response([
+                'success' => true,
+                'post' => $post,
+            ]);
+        } catch (\Throwable $th) {
+            return response([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ], 500);
         }
-        if ($hasPropertyAttributes) {
-            $post->property->update($propertyAttributes);
-        }
-
-        // Return a response with the updated post and property data
-        return response([
-            'success' => true,
-            'post' => $post,
-        ]);
     }
 
     public function destroy(Request $request, $post)
@@ -280,7 +286,7 @@ class PropertiesController extends Controller
             return response([
                 'success' => false,
                 'message' => $th->getMessage(),
-            ]);
+            ], 500);
         }
     }
 
@@ -348,7 +354,7 @@ class PropertiesController extends Controller
             return response([
                 'success' => false,
                 'message' => $th->getMessage(),
-            ]);
+            ], 500);
         }
     }
 
