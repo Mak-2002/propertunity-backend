@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,11 +13,11 @@ class RentPost extends Model
     protected static function boot()
     {
         parent::boot();
-    
+
         static::addGlobalScope('visibility', function (Builder $builder) {
             $builder->where('visibility', true);
         });
-    
+
         static::addGlobalScope('approval', function (Builder $builder) {
             $builder->where('approval', true);
         });
@@ -30,12 +31,23 @@ class RentPost extends Model
     ];
 
     protected $with = [
-        'property' , 'rating'
+        'property', 'rating'
     ];
 
-    public function toArray() {
+    public function toArray()
+    {
         $data = parent::toArray();
         $data['posttype'] = 'rent';
+        $rating = array_map(function ($item) {
+            unset($item['id']);
+            unset($item['rent_post_id']);
+            $item['rating_aspect'] = RatingAspect::findOrFail($item['rating_aspect_id'])->name;
+            unset($item['sum']);
+            unset($item['created_at']);
+            unset($item['updated_at']);
+            return $item;
+        }, $data['rating']);
+        $data['rating'] = $rating;
         return $data;
     }
 

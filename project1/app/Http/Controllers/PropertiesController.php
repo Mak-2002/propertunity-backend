@@ -10,6 +10,7 @@ use App\Models\Land;
 use App\Models\Office;
 use App\Models\Property;
 use App\Models\Rating;
+use App\Models\RatingAspect;
 use App\Models\RentPost;
 use App\Models\RentRequest;
 use App\Models\SalePost;
@@ -141,7 +142,6 @@ class PropertiesController extends Controller
             $category->parking = $validated['parking'] ?? null;
             $category->security_cameras = $validated['security_cameras'] ?? null;
             $category->{'Wi-Fi'} = $validated['Wi-Fi'];
-
         }
         $category?->save();
 
@@ -348,30 +348,50 @@ class PropertiesController extends Controller
         $post->save();
         return $post;
     }
-    public function rate(Request $request , $post)
-    { 
-        $post = RentPost::findOrFail($post);
-        if($request->services){
-            $rate1 = Rating::where('rent_post_id',$post->id)->where('rating_aspect_id',1)->first();
+    public function rate(Request $request, RentPost $post)
+    {
+        if ($request->services) {
+            $rate1 = Rating::where('rent_post_id', $post->id)->where('rating_aspect_id', 1)->first();
+            if (is_null($rate1)) {
+                $rate1 = new Rating;
+                $rate1->rent_post_id = $post->id;
+                $rate1->rating_aspect_id = 1;
+                $rate1->setRelation('ratingAspect', RatingAspect::findOrFail(1));
+            }
             $rate1->sum = $rate1->sum + $request->services;
-            $rate1->count +=1;
-            $rate1->avg = $rate1->sum/$rate1->count;
-            $rate1->save();}
-            if($request->location){
-            $rate2 = Rating::where('rent_post_id',$post->id)->where('rating_aspect_id',2)->first();
+            $rate1->count += 1;
+            $rate1->avg = $rate1->sum / $rate1->count;
+            $rate1->save();
+        }
+        if ($request->location) {
+            $rate2 = Rating::where('rent_post_id', $post->id)->where('rating_aspect_id', 2)->first();
+            if (is_null($rate2)) {
+                $rate2 = new Rating;
+                $rate2->rent_post_id = $post->id;
+                $rate2->rating_aspect_id = 2;
+                $rate2->setRelation('ratingAspect', RatingAspect::findOrFail(2));
+            }
             $rate2->sum = $rate2->sum + $request->location;
-            $rate2->count +=1;
-            $rate2->avg = $rate2->sum/$rate1->count;
-            $rate2->save();}
-            if($request->cleanliness){
-            $rate3 = Rating::where('rent_post_id',$post->id)->where('rating_aspect_id',3)->first();
+            $rate2->count += 1;
+            $rate2->avg = $rate2->sum / $rate1->count;
+            $rate2->save();
+        }
+        if ($request->cleanliness) {
+            $rate3 = Rating::where('rent_post_id', $post->id)->where('rating_aspect_id', 3)->first();
+            if (is_null($rate3)) {
+                $rate3 = new Rating;
+                $rate3->rent_post_id = $post->id;
+                $rate3->rating_aspect_id = 3;
+                $rate3->setRelation('ratingAspect', RatingAspect::findOrFail(3));
+            }
             $rate3->sum = $rate3->sum + $request->cleanliness;
-            $rate3->count +=1;
-            $rate3->avg = $rate3->sum/$rate1->count;
-            $rate3->save();}
-            $rate = Rating::where('rent_post_id',$post->id)->get();
-            
-        return $rate;
+            $rate3->count += 1;
+            $rate3->avg = $rate3->sum / $rate1->count;
+            $rate3->save();
+        }
+        $rate = Rating::where('rent_post_id', $post->id)->get();
+
+        return response()->json($rate);
     }
 
 

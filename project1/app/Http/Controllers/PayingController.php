@@ -11,7 +11,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-/////////TODO: price of a single month or more than one
 class PayingController extends Controller
 {
     public function pay( Request $request , $post )

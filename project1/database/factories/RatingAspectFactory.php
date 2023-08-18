@@ -19,8 +19,6 @@ class RatingAspectFactory extends Factory
     {
         return [
             'name'=>$this->faker->name,
-            'thumbnail'=>$this->faker->text,
-            
         ];
     }
 }

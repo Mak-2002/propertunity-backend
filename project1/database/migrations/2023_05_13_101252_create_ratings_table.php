@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('rent_post_id');
             $table->foreignId('rating_aspect_id');
-            $table->double('sum');
-            $table->integer('count');
-            $table->double('avg');
+            $table->double('sum')->default(0);
+            $table->integer('count')->default(0);
+            $table->double('avg')->default(0);
             $table->timestamps();
         });
     }

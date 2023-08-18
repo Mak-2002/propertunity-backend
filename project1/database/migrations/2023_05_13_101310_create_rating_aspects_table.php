@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('rating_aspects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('thumbnail');
+            $table->text('thumbnail')->nullable();
             $table->timestamps();
         });
     }

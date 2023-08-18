@@ -20,12 +20,7 @@ class RatingFactory extends Factory
     {
         return [
             'rent_post_id'=>RentPost::factory(),
-            'rating_aspect_id'=>RatingAspect::factory(),
-            'sum'=>$this->faker->randomNumber(),
-            'count'=>$this->faker->randomNumber(),
-            'avg'=>$this->faker->randomNumber(),
-
-
+            'rating_aspect_id'=>random_int(1, 3),
         ];
     }
 }

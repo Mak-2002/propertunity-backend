@@ -34,6 +34,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        return parent::render($request, $exception);
         $response = new Response;
         $data = [
             'success' => false,
@@ -55,6 +56,5 @@ class Handler extends ExceptionHandler
         $response->setContent($data);
 
         return $response;
-        // return parent::render($request, $exception);
     }
 }

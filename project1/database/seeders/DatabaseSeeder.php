@@ -39,6 +39,17 @@ class DatabaseSeeder extends Seeder
         // Properties Seeding
         Property::factory(30)->create();
 
+        RatingAspect::factory()->create([
+            'name' => 'services'
+        ]);
+        RatingAspect::factory()->create([
+            'name' => 'location'
+        ]);
+        RatingAspect::factory()->create([
+            'name' => 'cleanliness'
+        ]);
+
+
         // SalePosts Seeding
         SalePost::factory(2)->create([
             'user_id' => 2,
@@ -79,7 +90,6 @@ class DatabaseSeeder extends Seeder
 
         //Reviews and Ratings Seeding
         Rating::factory(10)->create();
-        RatingAspect::factory(10)->create();
         Review::factory(10)->create();
 
         // Favorites Seeding
