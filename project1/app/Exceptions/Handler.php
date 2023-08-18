@@ -2,8 +2,12 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -28,13 +32,29 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $e)
+    public function render($request, Throwable $exception)
     {
-        if ($request->expectsJson())
-            return response()->json([
-                'message' => $e->getMessage()
-            ], 500);
-            
-        return parent::render($request, $e);
+        $response = new Response;
+        $data = [
+            'success' => false,
+            'message' => $exception->getMessage(),
+        ];
+
+        // Custom logic to handle specific exceptions
+        if ($exception instanceof ValidationException) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+            $data['errors'] = $exception->errors();
+
+        } else if ($exception instanceof AuthenticationException)
+            $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
+
+        else
+            $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+
+
+        $response->setContent($data);
+
+        return $response;
+        // return parent::render($request, $exception);
     }
 }
