@@ -188,106 +188,84 @@ class PropertiesController extends Controller
 
     public function show(Request $request, $post)
     {
-        try {
-            if ($request->posttype == 'sale')
-            $post =SalePost::withoutGlobalScopes()->find($post);
-            else if ($request->posttype == 'rent')
-        $post = RentPost::withoutGlobalScopes()->find($post);
-
-        } catch (\Throwable $th) {
-            return response([
-                'success' => false,
-                'message' => $th->getMessage(),
-            ], 500);
-        }
-        return response($post);
+        if ($request->posttype == 'sale')
+            $post = SalePost::withoutGlobalScopes()->find($post);
+        else if ($request->posttype == 'rent')
+            $post = RentPost::withoutGlobalScopes()->find($post);
+        return response()->json($post);
     }
 
     public function update(Request $request, $post)
     {
-        try {
-            $validated = $request->validate([
-                'posttype' => 'in:sale,rent',
-                'property_type' => 'in:House,Villa,Apartment,Commercial,Land,Office',
-                'price' => 'numeric',
-                'monthly_rent' => 'numeric',
-                'max_duration' => 'integer',
-                'view_plan_id' => 'integer|exists:view_plans,id',
-                'name' => 'string',
-                'address' => 'string',
-                'room_count' => 'integer',
-                'bathroom_count' => 'integer',
-                'kitchen_count' => 'integer',
-                'storey' => 'integer',
-                'area' => 'numeric',
-                'about' => 'string|max:500',
-                'balkony' => 'integer',
-                'gym' => 'boolean',
-                'pool' => 'boolean',
-                'parking' => 'boolean',
-                'security_cameras' => 'boolean',
-                'elevator' => 'boolean',
-                'Wi-Fi' => 'boolean',
-                'security_gard' => 'boolean',
-                'garden' => 'boolean',
-            ]);
+        $validated = $request->validate([
+            'posttype' => 'in:sale,rent',
+            'property_type' => 'in:House,Villa,Apartment,Commercial,Land,Office',
+            'price' => 'numeric',
+            'monthly_rent' => 'numeric',
+            'max_duration' => 'integer',
+            'view_plan_id' => 'integer|exists:view_plans,id',
+            'name' => 'string',
+            'address' => 'string',
+            'room_count' => 'integer',
+            'bathroom_count' => 'integer',
+            'kitchen_count' => 'integer',
+            'storey' => 'integer',
+            'area' => 'numeric',
+            'about' => 'string|max:500',
+            'balkony' => 'integer',
+            'gym' => 'boolean',
+            'pool' => 'boolean',
+            'parking' => 'boolean',
+            'security_cameras' => 'boolean',
+            'elevator' => 'boolean',
+            'Wi-Fi' => 'boolean',
+            'security_gard' => 'boolean',
+            'garden' => 'boolean',
+        ]);
 
-            // Retrieve the post by ID
-            if ($request->posttype == 'sale')
-                $post = SalePost::findOrFail($post);
+        // Retrieve the post by ID
+        if ($request->posttype == 'sale')
+            $post = SalePost::findOrFail($post);
 
-            else if ($request->posttype == 'rent')
-                $post = RentPost::findOrFail($post);
+        else if ($request->posttype == 'rent')
+            $post = RentPost::findOrFail($post);
 
-            // Check if the request data includes any post attributes
-            $postAttributes = array_intersect_key($request->all(), $post->getAttributes());
-            $hasPostAttributes = !empty($postAttributes);
+        // Check if the request data includes any post attributes
+        $postAttributes = array_intersect_key($request->all(), $post->getAttributes());
+        $hasPostAttributes = !empty($postAttributes);
 
-            // Check if the request data includes any property attributes
-            $propertyAttributes = array_intersect_key($request->all(), $post->property->getAttributes());
-            $hasPropertyAttributes = !empty($propertyAttributes);
+        // Check if the request data includes any property attributes
+        $propertyAttributes = array_intersect_key($request->all(), $post->property->getAttributes());
+        $hasPropertyAttributes = !empty($propertyAttributes);
 
-            // Update the post and property attributes if there are any post or property attributes in the request data
-            if ($hasPostAttributes) {
-                $post->update($postAttributes);
-            }
-            if ($hasPropertyAttributes) {
-                $post->property->update($propertyAttributes);
-            }
-
-            // Return a response with the updated post and property data
-            return response([
-                'success' => true,
-                'post' => $post,
-            ]);
-        } catch (\Throwable $th) {
-            return response([
-                'success' => false,
-                'message' => $th->getMessage(),
-            ], 500);
+        // Update the post and property attributes if there are any post or property attributes in the request data
+        if ($hasPostAttributes) {
+            $post->update($postAttributes);
         }
+        if ($hasPropertyAttributes) {
+            $post->property->update($propertyAttributes);
+        }
+
+        // Return a response with the updated post and property data
+        return response([
+            'success' => true,
+            'post' => $post,
+        ]);
     }
 
     public function destroy(Request $request, $post)
     {
-        try {
-            if ($request->posttype == 'sale')
-                $property = SalePost::findOrFail($post)->with('property');
+        if ($request->posttype == 'sale')
+            $property = SalePost::withoutGlobalScope('visibility')->findOrFail($post)->with('property');
 
-            if ($request->posttype == 'rent')
-                $property = RentPost::findOrFail($post)->with('property');
+        if ($request->posttype == 'rent')
+            $property = RentPost::withoutGlobalScope('visibility')->findOrFail($post)->with('property');
 
-            $property->delete();
-            return response([
-                'success' => true,
-                'message' => 'Post deleted successfully',
-            ]);
-        } catch (\Throwable $th) {
-            return response([
-                'success' => false,
-                'message' => $th->getMessage(),
-            ], 500);
-        }
+        $property->delete();
+        return response([
+            'success' => true,
+            'message' => 'Post deleted successfully',
+        ]);
     }
 
     public function favorites(request $request)
@@ -311,64 +289,58 @@ class PropertiesController extends Controller
         return response()->json($favs);
     }
     public function change_favorite_state(Request $request, $post)
-    {    
-        try {
-            $favorite = null;
-            $is_sale_post = ($request->posttype == 'sale');
+    {
+        $favorite = null;
+        $is_sale_post = ($request->posttype == 'sale');
 
-            $user = Auth::user();
+        $user = Auth::user();
 
-            if ($is_sale_post)
-                $favorite = Favorite::where('user_id', $user->id)->where('sale_post_id', $post);
-            else
-                $favorite = Favorite::where('user_id', $user->id)->where('rent_post_id', $post);
+        if ($is_sale_post)
+            $favorite = Favorite::where('user_id', $user->id)->where('sale_post_id', $post);
+        else
+            $favorite = Favorite::where('user_id', $user->id)->where('rent_post_id', $post);
 
-            if ($favorite->exists()) {
-                $favorite->delete();
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Deleted from favorites successfully',
-                ]);
-            }
-
-
-            $favorite = new Favorite;
-            $favorite->setRelation('user', $user);
-            $favorite->user_id = $favorite->user->id;
-
-            if ($is_sale_post) {
-                $favorite->setRelation('sale_post', SalePost::findOrFail($post));
-                $favorite->sale_post_id = $favorite->sale_post->id;
-            } else {
-                $favorite->setRelation('rent_post', RentPost::findOrFail($post));
-                $favorite->rent_post_id = $favorite->rent_post->id;
-            }
-
-            $favorite->save();
-
+        if ($favorite->exists()) {
+            $favorite->delete();
             return response()->json([
                 'success' => true,
-                'message' => 'Added to favorites successfully',
+                'message' => 'Deleted from favorites successfully',
             ]);
-        } catch (\Throwable $th) {
-            return response([
-                'success' => false,
-                'message' => $th->getMessage(),
-            ], 500);
         }
+
+
+        $favorite = new Favorite;
+        $favorite->setRelation('user', $user);
+        $favorite->user_id = $favorite->user->id;
+
+        if ($is_sale_post) {
+            $favorite->setRelation('sale_post', SalePost::findOrFail($post));
+            $favorite->sale_post_id = $favorite->sale_post->id;
+        } else {
+            $favorite->setRelation('rent_post', RentPost::findOrFail($post));
+            $favorite->rent_post_id = $favorite->rent_post->id;
+        }
+
+        $favorite->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Added to favorites successfully',
+        ]);
     }
 
-    public function change_visibility(Request $request , $post)
-    {   
+    public function change_visibility(Request $request, $post)
+    {
         if ($request->posttype == 'sale')
-        $post = SalePost::withoutGlobalScopes()->find($post);
-    if ($request->posttype == 'rent')
-        $post = RentPost::withoutGlobalScopes()->find($post);
-       if ($post->visibility)
-       $post->visibility = false;
-       else{
-       $post->visibility = true;}
-       $post->save();
+            $post = SalePost::withoutGlobalScopes()->find($post);
+        if ($request->posttype == 'rent')
+            $post = RentPost::withoutGlobalScopes()->find($post);
+        if ($post->visibility)
+            $post->visibility = false;
+        else {
+            $post->visibility = true;
+        }
+        $post->save();
         return $post;
     }
 

@@ -28,7 +28,7 @@ class AuthController extends Controller
                 'message' => 'Invalid credentials'
             ], 401);
 
-        if ($request->phone !== "123456789" ||!auth()->attempt(request()->only('phone', 'password')))
+        if ($request->phone !== "123456789" || !auth()->attempt(request()->only('phone', 'password')))
             return response()->json([
                 'success' => false,
                 'message' => 'User with phone not found Or Wrong password'
@@ -70,10 +70,9 @@ class AuthController extends Controller
 
     public function logout()
     {
-
         $user = Auth::user();
         $user->tokens()->delete();
-        Auth::logout();
+        // Auth::logout();
         return response()->json([
             'success' => true,
             'message' => 'Logged out successfully',
@@ -112,7 +111,7 @@ class AuthController extends Controller
     public function sendSMS(string $phone)
     {
         //$basic = new \Vonage\Client\Credentials\Basic("9d3f82fc", "D6EPxByXtmjr0bUU"); //DEBUG
-      //  $basic = new \Vonage\Client\Credentials\Basic("a293b6b5", "Vmbeth6UAsoyEUnA");
+        //  $basic = new \Vonage\Client\Credentials\Basic("a293b6b5", "Vmbeth6UAsoyEUnA");
 
         // $client = new \Vonage\Client($basic); //DEBUG
         // $user = User::where('id', $id)->first();
