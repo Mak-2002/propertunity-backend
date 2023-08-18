@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\VerificationCode;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -82,6 +83,8 @@ class AuthController extends Controller
     ///login screen 1111111
     public function login(Request $request)
     {
+        if($request->phone === '0000000000') throw new AuthenticationException( "User with phone not found Or Wrong password");
+
         // Qusai: used Laravel's validator to access Validator::fails() method
         $validator = validator($request->only('phone', 'password'), [
             'phone' => ['required', 'regex:/^[0-9+]+$/'],
