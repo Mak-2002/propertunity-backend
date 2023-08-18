@@ -28,10 +28,10 @@ class AuthController extends Controller
                 'message' => 'Invalid credentials'
             ], 401);
 
-        if ($request->phone !== "123456789" || !auth()->attempt(request()->only('phone', 'password')))
+        if ($request->phone !== "0000000000" || !auth()->attempt(request()->only('phone', 'password')))
             return response()->json([
                 'success' => false,
-                'message' => 'User with phone not found Or Wrong password'
+                'message' => 'Wrong Admin Credentials'
             ], 401);
 
         return response([

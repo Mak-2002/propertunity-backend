@@ -33,6 +33,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Admin Seeding
+        $admin = User::factory()->create([
+            'name' => 'admin',
+            'phone' => '0000000000',
+            'password' => bcrypt('propertunityadmin'),
+            'verified' => true,
+        ])->first();
+
         // Users Seeding
         User::factory(20)->create();
 
