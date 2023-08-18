@@ -30,7 +30,7 @@ class RentPost extends Model
     ];
 
     protected $with = [
-        'property'
+        'property' , 'rating'
     ];
 
     public function toArray() {

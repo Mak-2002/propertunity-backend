@@ -23,6 +23,8 @@ class RatingFactory extends Factory
             'rating_aspect_id'=>RatingAspect::factory(),
             'sum'=>$this->faker->randomNumber(),
             'count'=>$this->faker->randomNumber(),
+            'avg'=>$this->faker->randomNumber(),
+
 
         ];
     }

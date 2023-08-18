@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rating;
 use App\Models\RentPost;
 use App\Models\SalePost;
 use App\Models\ViewRequest;
@@ -39,7 +40,7 @@ public function approveRequest(Request $request, $post)
 
     if ($request->posttype == 'rent') {
         $post = RentPost::withoutGlobalScopes()->find($post);
-    } else {
+    } else if ($request->posttype == 'sale') {
         $post = SalePost::withoutGlobalScopes()->find($post);
 
     }
@@ -48,10 +49,36 @@ public function approveRequest(Request $request, $post)
         $post->approval = true;
         $post->save();
 
+        if ($request->posttype == 'rent') {
+            $r1 = new Rating;
+            $r1->rent_post_id = $post->id;
+            $r1->rating_aspect_id = 1;
+            $r1->sum = 0;
+            $r1->count = 0;
+            $r1->avg = 0;
+            $r1->save();
+
+            $r2 = new Rating;
+            $r2->rent_post_id = $post->id;
+            $r2->rating_aspect_id = 2;
+            $r2->sum = 0;
+            $r2->count = 0;
+            $r2->avg = 0;
+            $r2->save();
+
+            $r3 = new Rating;
+            $r3->rent_post_id = $post->id;
+            $r3->rating_aspect_id = 3;
+            $r3->sum = 0;
+            $r3->count = 0;
+            $r3->avg = 0;
+            $r3->save();
+    }
         return response()->json([
             'success' => true,
-            'requested_post' => $post
+            'requested_post' => $post->refresh()
         ]);
+
     }
 
     return response()->json([

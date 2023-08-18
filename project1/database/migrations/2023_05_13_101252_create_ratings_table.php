@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('rating_aspect_id');
             $table->double('sum');
             $table->integer('count');
+            $table->double('avg');
             $table->timestamps();
         });
     }

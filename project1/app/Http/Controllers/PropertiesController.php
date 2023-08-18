@@ -9,6 +9,7 @@ use App\Models\House;
 use App\Models\Land;
 use App\Models\Office;
 use App\Models\Property;
+use App\Models\Rating;
 use App\Models\RentPost;
 use App\Models\RentRequest;
 use App\Models\SalePost;
@@ -139,7 +140,8 @@ class PropertiesController extends Controller
             $category->balkony = $validated['balkony'] ?? null;
             $category->parking = $validated['parking'] ?? null;
             $category->security_cameras = $validated['security_cameras'] ?? null;
-            // $category->[Wi-Fi] = $validated['Wi-Fi'];
+            $category->{'Wi-Fi'} = $validated['Wi-Fi'];
+
         }
         $category?->save();
 
@@ -241,11 +243,15 @@ class PropertiesController extends Controller
         // Update the post and property attributes if there are any post or property attributes in the request data
         if ($hasPostAttributes) {
             $post->update($postAttributes);
+            $post->visibility = false;
+            $post->approval = false;
         }
         if ($hasPropertyAttributes) {
             $post->property->update($propertyAttributes);
+            $post->visibility = false;
+            $post->approval = false;
         }
-
+        $post->save();
         // Return a response with the updated post and property data
         return response([
             'success' => true,
@@ -342,6 +348,31 @@ class PropertiesController extends Controller
         }
         $post->save();
         return $post;
+    }
+    public function rate(Request $request , $post)
+    { 
+        $post = RentPost::findOrFail($post);
+        if($request->services){
+            $rate1 = Rating::where('rent_post_id',$post->id)->where('rating_aspect_id',1)->first();
+            $rate1->sum = $rate1->sum + $request->services;
+            $rate1->count +=1;
+            $rate1->avg = $rate1->sum/$rate1->count;
+            $rate1->save();}
+            if($request->location){
+            $rate2 = Rating::where('rent_post_id',$post->id)->where('rating_aspect_id',2)->first();
+            $rate2->sum = $rate2->sum + $request->location;
+            $rate2->count +=1;
+            $rate2->avg = $rate2->sum/$rate1->count;
+            $rate2->save();}
+            if($request->cleanliness){
+            $rate3 = Rating::where('rent_post_id',$post->id)->where('rating_aspect_id',3)->first();
+            $rate3->sum = $rate3->sum + $request->cleanliness;
+            $rate3->count +=1;
+            $rate3->avg = $rate3->sum/$rate1->count;
+            $rate3->save();}
+            $rate = Rating::where('rent_post_id',$post->id)->get();
+            
+        return $rate;
     }
 
 

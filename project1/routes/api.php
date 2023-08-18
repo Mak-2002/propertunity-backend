@@ -48,6 +48,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('getpendingposts', [AdminController::class, 'getPendingPosts'])->name('getPendingPosts');
     Route::put('approverequest/{viewRequest}', [AdminController::class, 'approveRequest'])->name('approveRequest');
     Route::put('rejectrequest/{viewRequest}', [AdminController::class, 'rejectRequest'])->name('rejectRequest');
+    Route::put('rate/{post}', [PropertiesController::class, 'rate'])->name('rate');
 
 
 
