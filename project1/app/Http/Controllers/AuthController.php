@@ -24,16 +24,10 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails())
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid credentials'
-            ], 401);
+            throw new AuthenticationException("Invalid credentials");
 
         if ($request->phone !== "0000000000" || !auth()->attempt(request()->only('phone', 'password')))
-            return response()->json([
-                'success' => false,
-                'message' => 'Wrong Admin Credentials'
-            ], 401);
+            throw new AuthenticationException("Wrong Admin Credentials");
 
         return response([
             'success' => true,
@@ -53,10 +47,7 @@ class AuthController extends Controller
 
         // we will assume that frontend checked for all rules except for uniqueness
         if ($validator->fails())
-            return response()->json([
-                'success' => false,
-                'message' => 'A user with the entered phone number already exists',
-            ], 401);
+            throw new AuthenticationException("A user with the entered phone number already exists");
 
         // $authToken = $user->createToken('auth-token')->plainTextToken;
 
@@ -83,7 +74,7 @@ class AuthController extends Controller
     ///login screen 1111111
     public function login(Request $request)
     {
-        if($request->phone === '0000000000') throw new AuthenticationException( "User with phone not found Or Wrong password");
+        if ($request->phone === '0000000000') throw new AuthenticationException("User with phone not found Or Wrong password");
 
         // Qusai: used Laravel's validator to access Validator::fails() method
         $validator = validator($request->only('phone', 'password'), [
@@ -92,16 +83,10 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails())
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid credentials'
-            ], 401);
+            throw new AuthenticationException("Invalid credentials");
 
         if (!auth()->attempt(request()->only('phone', 'password')))
-            return response()->json([
-                'success' => false,
-                'message' => 'User with phone not found Or Wrong password'
-            ], 401);
+            throw new AuthenticationException("User with phone not found Or Wrong password");
 
         return response([
             'success' => true,
@@ -168,27 +153,20 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails())
-            return response([
-                'success' => false,
-                'message' => 'Invalid credentials',
-            ], 401);
+            throw new AuthenticationException("Invalid credentials");
 
         #Validation Logic
         $verificationCode = VerificationCode::where('phone', $request->phone)->where('otp',  $request->otp)->first();
 
         $now = now();
-        $data = [
-            'success' => false
-        ];
-        if (!$verificationCode) {
+        if (!$verificationCode)
             // return redirect()->back()->with('error', 'Your OTP is not correct');
-            $data['message'] = 'OTP not creaeted or OTP is wrong';
-            return response($data, 401);
-        } elseif ($now->isAfter($verificationCode->expire_at)) {
+            throw new AuthenticationException("OTP not creaeted or OTP is wrong");
+
+        elseif ($now->isAfter($verificationCode->expire_at))
             // return redirect()->route('otp.login')->with('error', 'Your OTP has expired');
-            $data['message'] = 'Your OTP has expired';
-            return response($data, 401);
-        }
+            throw new AuthenticationException("Your OTP has expired");
+
         // Expire The OTP
         $verificationCode->update([
             'expire_at' => now(),

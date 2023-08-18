@@ -15,7 +15,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()->name !== 'admin' || auth()->user()->phone !== '0000000000')
+        if (auth()->user()->name != 'admin' || auth()->user()->phone != '0000000000')
             abort(403, 'Unauthorized, User doesn\'t have admin powers');
 
         return $next($request);
