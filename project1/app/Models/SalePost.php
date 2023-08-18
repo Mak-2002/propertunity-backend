@@ -2,21 +2,22 @@
 
 namespace App\Models;
 
+use App\Models\SaleContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class SalePost extends Model
-{ 
+{
 
     protected static function boot()
     {
         parent::boot();
-    
+
         static::addGlobalScope('visibility', function (Builder $builder) {
             $builder->where('visibility', true);
         });
-    
+
         static::addGlobalScope('approval', function (Builder $builder) {
             $builder->where('approval', true);
         });
@@ -34,7 +35,8 @@ class SalePost extends Model
         'property'
     ];
 
-    public function toArray() {
+    public function toArray()
+    {
         $data = parent::toArray();
         $data['posttype'] = 'sale';
         return $data;
@@ -53,6 +55,11 @@ class SalePost extends Model
     public function viewPlan()
     {
         return $this->hasMany(ViewPlan::class);
+    }
+
+    public function saleContract()
+    {
+        return $this->hasOne(SaleContract::class);
     }
 
     public function favorable_by()

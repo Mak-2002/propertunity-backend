@@ -341,11 +341,10 @@ class PropertiesController extends Controller
             $post = SalePost::withoutGlobalScopes()->find($post);
         if ($request->posttype == 'rent')
             $post = RentPost::withoutGlobalScopes()->find($post);
-        if ($post->visibility)
-            $post->visibility = false;
-        else {
-            $post->visibility = true;
-        }
+
+        // dd($post);
+        $post->visibility = !$post->visibility;
+
         $post->save();
         return $post;
     }

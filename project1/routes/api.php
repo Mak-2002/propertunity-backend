@@ -67,6 +67,4 @@ Route::post('verification', [AuthController::class, 'verification'])->name('veri
 // Route::get('test2', [PropertiesController::class , 'test2']);
 
 /* TODO:
-add images table to user
-add balance attribute to user
 */

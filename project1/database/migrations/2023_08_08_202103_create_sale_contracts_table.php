@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('sale_contracts', function (Blueprint $table) {
             $table->id();
             $table->string('post_id');
-            $table->foreignId('payer_id');
-            $table->foreignId('payee_id');
+            $table->foreignId('payer_id')->references('id')->on('users');
+            $table->foreignId('payee_id')->references('id')->on('users');
             $table->double('payment_value');
             $table->timestamps();
         });
