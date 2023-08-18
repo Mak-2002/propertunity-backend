@@ -42,6 +42,12 @@ class DatabaseSeeder extends Seeder
         ])->first();
 
         // Users Seeding
+        User::factory()->create([
+            'name' => 'qusai',
+            'phone' => '1111111111',
+            'password' => bcrypt('20012002'),
+            'verified' => true,
+        ]);
         User::factory(20)->create();
 
         // Properties Seeding
@@ -62,6 +68,12 @@ class DatabaseSeeder extends Seeder
         SalePost::factory(2)->create([
             'user_id' => 2,
             'property_id' => 1,
+            'approval' => 1,
+            'visibility' => 1,
+        ]);
+        SalePost::factory(2)->create([
+            'user_id' => 2,
+            'property_id' => 1,
             'approval' => null
         ]);
         SalePost::factory(10)->create();
@@ -70,8 +82,13 @@ class DatabaseSeeder extends Seeder
         RentPost::factory(2)->create([
             'user_id' => 2,
             'property_id' => 1,
+            'approval' => 1,
+            'visibility' => 1,
+        ]);
+        RentPost::factory(2)->create([
+            'user_id' => 2,
+            'property_id' => 1,
             'approval' => null
-
         ]);
         RentPost::factory(10)->create();
 
@@ -101,13 +118,13 @@ class DatabaseSeeder extends Seeder
         Review::factory(10)->create();
 
         // Favorites Seeding
-        Favorite::factory(5)->create([
-            'user_id' => rand(1, 20),
+        Favorite::factory(2)->create([
+            'user_id' => 2,
             'rent_post_id' => rand(3, 11),
         ]);
 
-        Favorite::factory(5)->create([
-            'user_id' => rand(1, 20),
+        Favorite::factory(1)->create([
+            'user_id' => 2,
             'sale_post_id' => rand(3, 11),
         ]);
     }
