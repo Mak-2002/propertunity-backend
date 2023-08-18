@@ -262,10 +262,12 @@ class PropertiesController extends Controller
     public function destroy(Request $request, $post)
     {
         if ($request->posttype == 'sale')
-            $property = SalePost::withoutGlobalScope('visibility')->findOrFail($post)->with('property');
+            // $property = SalePost::withoutGlobalScope('visibility')->findOrFail($post)->with('property');
+            $property = SalePost::withoutGlobalScopes()->find($post);
 
         if ($request->posttype == 'rent')
-            $property = RentPost::withoutGlobalScope('visibility')->findOrFail($post)->with('property');
+            // $property = RentPost::withoutGlobalScope('visibility')->findOrFail($post)->with('property');
+            $property = RentPost::withoutGlobalScopes()->find($post);
 
         $property->delete();
         return response([
@@ -394,66 +396,4 @@ class PropertiesController extends Controller
         return response()->json($rate);
     }
 
-
-    public function test(Request $request)
-    {
-        $property = House::where('id', $request->id)->with('rent')->get();
-        return ($property->toJSON());
-    }
-
-    public function test2(Request $request)
-    {
-        $favs = House::whereHasMorph(
-            'rent',
-            fn ($query) =>
-            $query->where('id', $request->id)
-        )->get();
-        return ($favs->toJSON());
-    }
 }
- ///////////////////update
- //   if($request->price){
-    //     $post = SalePost::with('property')->findOrFail($id);
-    //     $post->update($request->all());
-
-    //   }
-    //   if($request->monthly_rent||$request->max_duration){
-    //     $post = RentPost::with('property')->findOrFail($id);
-    //     $post->update($request->all());
-
-
-    //   }
-
-
-    //     if ($post) {
-    //         $property = $post->property;
-    //         if ($property) {
-    //             $property->update($request->all());
-    //         }
-    //         $post->update($request->all());
-    //     }
-    //     return response([
-    //         'success' => true,
-    //         'post' => $post,
-    //     ]);
-
-
-
-    //             // Retrieve the post by ID
-    // $post = SalePost::with('property')->findOrFail($id);
-
-    // // Retrieve the related property
-    // $property = $post->property;
-
-    // // Update the post attributes
-    // $post->update($request->all());
-
-    // // Update the property attributes
-    // $property->update($request->all());
-
-    // // Return a response with the updated post and property data
-    // return response([
-    //     'success' => true,
-    //     'post' => $post,
-    //     'property' => $property,
-    // ]);
