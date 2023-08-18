@@ -35,6 +35,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('posts', PropertiesController::class);
     Route::resource('properties/{property}/images', PropertyImagesController::class);
     Route::get('myposts', [PropertiesController::class, 'my_posts_index'])->name('my_posts');
+    Route::put('myposts/changevisibility/{post}', [PropertiesController::class, 'change_visibility'])->name('change_visibility');
     Route::get('favorites', [PropertiesController::class, 'favorites'])->name('properties.favorites');
     Route::post('posts/{post}/favorite', [PropertiesController::class, 'change_favorite_state'])->where('post', '[0-9]+')->name('properties.favorite');
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -47,6 +48,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('getpendingposts', [AdminController::class, 'getPendingPosts'])->name('getPendingPosts');
     Route::put('approverequest/{viewRequest}', [AdminController::class, 'approveRequest'])->name('approveRequest');
     Route::put('rejectrequest/{viewRequest}', [AdminController::class, 'rejectRequest'])->name('rejectRequest');
+
 
 
 

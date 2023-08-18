@@ -190,10 +190,10 @@ class PropertiesController extends Controller
     {
         try {
             if ($request->posttype == 'sale')
-                $post = SalePost::findOrFail($post);
-
+            $post =SalePost::withoutGlobalScopes()->find($post);
             else if ($request->posttype == 'rent')
-                $post = RentPost::findOrFail($post);
+        $post = RentPost::withoutGlobalScopes()->find($post);
+
         } catch (\Throwable $th) {
             return response([
                 'success' => false,
@@ -311,7 +311,7 @@ class PropertiesController extends Controller
         return response()->json($favs);
     }
     public function change_favorite_state(Request $request, $post)
-    {
+    {    
         try {
             $favorite = null;
             $is_sale_post = ($request->posttype == 'sale');
@@ -357,6 +357,21 @@ class PropertiesController extends Controller
             ], 500);
         }
     }
+
+    public function change_visibility(Request $request , $post)
+    {   
+        if ($request->posttype == 'sale')
+        $post = SalePost::withoutGlobalScopes()->find($post);
+    if ($request->posttype == 'rent')
+        $post = RentPost::withoutGlobalScopes()->find($post);
+       if ($post->visibility)
+       $post->visibility = false;
+       else{
+       $post->visibility = true;}
+       $post->save();
+        return $post;
+    }
+
 
     public function test(Request $request)
     {
