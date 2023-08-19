@@ -98,9 +98,9 @@ class AuthController extends Controller
     //send the otp 2222222
     public function sendSMS(string $phone)
     {
-        //$basic = new \Vonage\Client\Credentials\Basic("5f71ea6f", "M8cXgJlREvCLo2cj"); //DEBUG
+        $basic = new \Vonage\Client\Credentials\Basic("5f71ea6f", "M8cXgJlREvCLo2cj"); //DEBUG
 
-        // $client = new \Vonage\Client($basic); //DEBUG
+        $client = new \Vonage\Client($basic); //DEBUG
         // $user = User::where('id', $id)->first();
         //    $phone=$user->phone;
         # User Does not Have Any Existing OTP
@@ -116,29 +116,29 @@ class AuthController extends Controller
         else {
             $verificationCode = VerificationCode::create([
                 'phone' => $phone,
-                'otp' => 111111, // DEBUG: Set by qusai for testing purpose
-                // 'otp' => rand(111111, 999999), //PRODUCTION
+                // 'otp' => 111111, // DEBUG: Set by qusai for testing purpose
+                'otp' => rand(111111, 999999), //PRODUCTION
                 'expire_at' => now()->addMinutes(10),
             ]);
             $otp = $verificationCode->otp;
         }
 
 
-        // $response = $client->sms()->send( //DEBUG
-        //     new \Vonage\SMS\Message\SMS($phone, 'hi', $otp)
-        // );
+        $response = $client->sms()->send( //DEBUG
+            new \Vonage\SMS\Message\SMS($phone, 'hi', $otp)
+        );
 
-        // $message = $response->current();
+        $message = $response->current();
 
-        // if ($message->getStatus() == 0) {
-        //     return ([
-        //         'success' => true,
-        //         'otp' => $otp,
-        //     ]);
-        // } else {
-        //     //TODO: should it return a response ?
-        //     echo "The message failed with success: " . $message->getStatus() . "\n";
-        // }
+        if ($message->getStatus() == 0) {
+            return ([
+                'success' => true,
+                'otp' => $otp,
+            ]);
+        } else {
+            //TODO: should it return a response ?
+            echo "The message failed with success: " . $message->getStatus() . "\n";
+        }
     }
 
     public function verification(Request $request)
