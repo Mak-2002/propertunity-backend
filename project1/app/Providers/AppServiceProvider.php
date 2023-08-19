@@ -35,11 +35,10 @@ class AppServiceProvider extends ServiceProvider
             'Favorite' => 'App\\Models\\Favorite',
             'Rating' => 'App\\Models\\Rating',
             'RatingAspect' => 'App\\Models\\RatingAspect',
-            'Review' => 'App\\Models\\Review',
             'VerificationCode' => 'App\\Models\\VerificationCode',
             'ViewPlan' => 'App\\Models\\ViewPlan',
             'ViewRequest' => 'App\\Models\\ViewRequest'
         ]);
-        //    // Relation::morphMap([], 'User' , 'RentPost', 'SalePost' , 'Favorite','Rating' ,'RatingAspect','Review','VerificationCode','ViewPlan','ViewRequest');
+        //    // Relation::morphMap([], 'User' , 'RentPost', 'SalePost' , 'Favorite','Rating' ,'RatingAspect', 'VerificationCode','ViewPlan','ViewRequest');
     }
 }

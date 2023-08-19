@@ -16,7 +16,6 @@ use App\Models\RatingAspect;
 use App\Models\RentContract;
 use App\Models\RentPost;
 use App\Models\RentRequest;
-use App\Models\Review;
 use App\Models\SaleContract;
 use App\Models\SalePost;
 use App\Models\SaleRequest;
@@ -113,18 +112,19 @@ class DatabaseSeeder extends Seeder
         //  // RentContracts Seeding
         // RentContract::factory(10)->create();
 
-        //Reviews and Ratings Seeding
+        //Ratings Seeding
         Rating::factory(10)->create();
-        Review::factory(10)->create();
 
         // Favorites Seeding
         Favorite::factory(2)->create([
             'user_id' => 2,
             'rent_post_id' => rand(3, 11),
+            'sale_post_id' => null,
         ]);
 
         Favorite::factory(1)->create([
             'user_id' => 2,
+            'rent_post_id' => null,
             'sale_post_id' => rand(3, 11),
         ]);
     }

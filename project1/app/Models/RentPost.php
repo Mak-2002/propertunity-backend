@@ -74,10 +74,6 @@ class RentPost extends Model
     {
         return $this->hasMany(Rating::class);
     }
-    public function review()
-    {
-        return $this->hasMany(Review::class);
-    }
 
     protected function scopeFilter($query, array $filters)
     {
