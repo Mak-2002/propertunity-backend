@@ -182,7 +182,9 @@ class PropertiesController extends Controller
 
         $pic = new PropertyImagesController;
         $response = $pic->store($request, $property->id);
-        
+
+        $post->refresh();
+        $post->load('property');
         // if ($response->getStatusCode() != 200)
         //     return $response;
 
