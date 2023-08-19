@@ -180,6 +180,11 @@ class PropertiesController extends Controller
             $post->load('property');
         }
 
+        $pic = new PropertyImagesController;
+        $response = $pic->store($request, $property->id);
+        
+        // if ($response->getStatusCode() != 200)
+        //     return $response;
 
         return response([
             'success' => true,
@@ -395,5 +400,4 @@ class PropertiesController extends Controller
 
         return response()->json($rate);
     }
-
 }
