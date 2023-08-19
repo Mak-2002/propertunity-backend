@@ -38,16 +38,18 @@ class RentPost extends Model
     {
         $data = parent::toArray();
         $data['posttype'] = 'rent';
-        $rating = array_map(function ($item) {
-            unset($item['id']);
-            unset($item['rent_post_id']);
-            $item['rating_aspect'] = RatingAspect::findOrFail($item['rating_aspect_id'])->name;
-            unset($item['sum']);
-            unset($item['created_at']);
-            unset($item['updated_at']);
-            return $item;
-        }, $data['rating']);
-        $data['rating'] = $rating;
+        if (isset($data['rating'])) {
+            $rating = array_map(function ($item) {
+                unset($item['id']);
+                unset($item['rent_post_id']);
+                $item['rating_aspect'] = RatingAspect::findOrFail($item['rating_aspect_id'])->name;
+                unset($item['sum']);
+                unset($item['created_at']);
+                unset($item['updated_at']);
+                return $item;
+            }, $data['rating']);
+            $data['rating'] = $rating;
+        }
         return $data;
     }
 
