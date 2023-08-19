@@ -41,12 +41,13 @@ class DatabaseSeeder extends Seeder
         ])->first();
 
         // Users Seeding
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'qusai',
             'phone' => '1111111111',
             'password' => bcrypt('20012002'),
             'verified' => true,
-        ]);
+        ])->first();
+
         User::factory(20)->create();
 
         // Properties Seeding
@@ -91,6 +92,27 @@ class DatabaseSeeder extends Seeder
         ]);
         RentPost::factory(10)->create();
 
+        // Favorites Seeding
+        Favorite::factory(2)->create([
+            'user_id' => 2,
+            'rent_post_id' => rand(2, 10),
+            'sale_post_id' => null,
+        ])->each(function ($favorite) {
+            $rent_post = RentPost::withoutGlobalScopes()->findOrFail($favorite->rent_post_id);
+            $rent_post->setRelation('favorable_by', $favorite);
+            $rent_post->save();
+        });
+
+        Favorite::factory(1)->create([
+            'user_id' => 2,
+            'rent_post_id' => null,
+            'sale_post_id' => rand(2, 10),
+        ])->each(function ($favorite) {
+            $sale_post = SalePost::withoutGlobalScopes()->findOrFail($favorite->sale_post_id);
+            $sale_post->setRelation('favorable_by', $favorite);
+            $sale_post->save();
+        });
+
         // ViewRequests Seeding
         // ViewRequest::factory(5)->create([
         //     'sale_post_id' => 3,
@@ -114,18 +136,5 @@ class DatabaseSeeder extends Seeder
 
         //Ratings Seeding
         Rating::factory(10)->create();
-
-        // Favorites Seeding
-        Favorite::factory(2)->create([
-            'user_id' => 2,
-            'rent_post_id' => rand(3, 11),
-            'sale_post_id' => null,
-        ]);
-
-        Favorite::factory(1)->create([
-            'user_id' => 2,
-            'rent_post_id' => null,
-            'sale_post_id' => rand(3, 11),
-        ]);
     }
 }

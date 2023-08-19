@@ -282,14 +282,14 @@ class PropertiesController extends Controller
             'favorable_by',
             fn ($query) =>
             $query->where('user_id', Auth::user()->id)
-        )->with('property')->get();
+        )->get();
 
 
         $rentfavs = RentPost::whereHas(
             'favorable_by',
             fn ($query) =>
             $query->where('user_id', Auth::user()->id)
-        )->with('property')->get();
+        )->get();
 
         $favs = $rentfavs->concat($salefavs);
 

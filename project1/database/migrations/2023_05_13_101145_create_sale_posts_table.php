@@ -21,7 +21,7 @@ return new class extends Migration
           //  $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->double('price');
             $table->boolean('visibility')->default(true);
-            $table->boolean('approval')->nullable()->default(null);
+            $table->boolean('approval')->nullable();
             $table->text('rejection_purpose')->nullable();
            // $table->unsignedBigInteger('postable_id');
             $table->timestamps();
