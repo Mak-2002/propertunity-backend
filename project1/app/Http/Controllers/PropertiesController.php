@@ -180,14 +180,6 @@ class PropertiesController extends Controller
             $post->load('property');
         }
 
-        $pic = new PropertyImagesController;
-        $response = $pic->store($request, $property->id);
-
-        $post->refresh();
-        $post->load('property');
-        // if ($response->getStatusCode() != 200)
-        //     return $response;
-
         return response([
             'success' => true,
             'message' => 'Post created successfully',
