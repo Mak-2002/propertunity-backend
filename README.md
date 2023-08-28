@@ -23,7 +23,7 @@ This Laravel backend project serves as the backend API for a property sale, purc
 
 ## Configuration
 - Configure the database connection in the `.env` file.
-- OTP service server is not available in Syria, so you might use VPN for that.
+- OTP server is not available in Syria, so you might use VPN for that.
 
 ## Usage
 - The backend API provides endpoints for managing property listings, user registration and authentication, and property transactions.
