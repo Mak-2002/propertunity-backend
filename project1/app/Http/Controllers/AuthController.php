@@ -98,9 +98,9 @@ class AuthController extends Controller
     //send the otp 2222222
     public function sendSMS(string $phone)
     {
-        $basic = new \Vonage\Client\Credentials\Basic("5f71ea6f", "M8cXgJlREvCLo2cj"); //DEBUG
+        $basic  = new \Vonage\Client\Credentials\Basic("ca8783a7", "IjsVFJiHwi1IlWQO");
+        $client = new \Vonage\Client($basic);
 
-        $client = new \Vonage\Client($basic); //DEBUG
         // $user = User::where('id', $id)->first();
         //    $phone=$user->phone;
         # User Does not Have Any Existing OTP
@@ -125,7 +125,7 @@ class AuthController extends Controller
 
 
         $response = $client->sms()->send( //DEBUG
-            new \Vonage\SMS\Message\SMS($phone, 'hi', $otp)
+            new \Vonage\SMS\Message\SMS($phone, 'Account Verefication', $otp)
         );
 
         $message = $response->current();
