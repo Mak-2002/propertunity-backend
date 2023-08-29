@@ -17,13 +17,15 @@
     "require-dev": {
         "beyondcode/laravel-er-diagram-generator": "^2.0",
         "fakerphp/faker": "^1.9.1",
+        "knuckleswtf/scribe": "^4.23",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.2",
         "phpunitgen/console": "^5.0",
-        "spatie/laravel-ignition": "^2.0"
+        "spatie/laravel-ignition": "^2.0",
+        "zircote/swagger-php": "^4.7"
     },
     "autoload": {
         "psr-4": {
