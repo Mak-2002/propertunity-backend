@@ -52,7 +52,7 @@ class AuthController extends Controller
         // $authToken = $user->createToken('auth-token')->plainTextToken;
 
 
-        $sms = $this->sendSMS($request->phone); //DEBUG
+        $sms = $this->sendSMS($request->phone);
         return response([
             'success' => true,
             'message' => 'Waiting for OTP verification',
@@ -98,15 +98,9 @@ class AuthController extends Controller
     //send the otp 2222222
     public function sendSMS(string $phone)
     {
-<<<<<<< Updated upstream
-        $basic  = new \Vonage\Client\Credentials\Basic("ca8783a7", "IjsVFJiHwi1IlWQO");
-        $client = new \Vonage\Client($basic);
+        // $basic  = new \Vonage\Client\Credentials\Basic("ca8783a7", "IjsVFJiHwi1IlWQO");
+        // $client = new \Vonage\Client($basic);
 
-=======
-        // $basic = new \Vonage\Client\Credentials\Basic("5f71ea6f", "M8cXgJlREvCLo2cj"); //DEBUG
-
-        // $client = new \Vonage\Client($basic); //DEBUG
->>>>>>> Stashed changes
         // $user = User::where('id', $id)->first();
         //    $phone=$user->phone;
         # User Does not Have Any Existing OTP
@@ -130,15 +124,9 @@ class AuthController extends Controller
         }
 
 
-<<<<<<< Updated upstream
-        $response = $client->sms()->send( //DEBUG
-            new \Vonage\SMS\Message\SMS($phone, 'Account Verefication', $otp)
-        );
-=======
-    //     $response = $client->sms()->send( //DEBUG
-    //         new \Vonage\SMS\Message\SMS($phone, 'hi', $otp)
-    //     );
->>>>>>> Stashed changes
+        // $response = $client->sms()->send( //DEBUG
+        //     new \Vonage\SMS\Message\SMS($phone, 'Account Verefication', $otp)
+        // );
 
     //     $message = $response->current();
 
